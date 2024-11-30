@@ -175,31 +175,7 @@ useEffect(() => {
     return (
         <div style={{ padding: "20px" }}>
             <h1 style={{ textAlign: "center" }}>Combined Good Timings</h1>
-            <div className="cityAndDate">
-                {/* Form for taking date and city input */}
-                <label htmlFor="city">City:</label>
-                <input
-                    type="text"
-                    id="city"
-                    placeholder="Enter city"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                />
-                <br />
-                <label htmlFor="date">Date (DD/MM/YYYY):</label>
-                <input
-                    type="text"
-                    id="date"
-                    placeholder="Enter date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                />
-                <br />
-                <button onClick={getMuhuratData}>Get Muhurat</button>
-                {/* <button onClick={toggleShowAllRows}>
-                    {showAll ? "Good Timings Only" : "Show All Rows"}
-                </button> */}
-            </div>
+     
            
             {finalData.length > 0 ? (
                 <table border="1" cellSpacing="0" cellPadding="5" style={{ width: "100%", textAlign: "left" }}>
