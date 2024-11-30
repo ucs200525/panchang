@@ -163,20 +163,23 @@ function getCurrentDateInTimeZone(timeZone) {
 
 // Function to fetch GeoName ID based on city
 async function getGeoNameId(city) {
-    const geoNamesUrl = `http://api.geonames.org/searchJSON?q=${city}&maxRows=1&username=${geoUsername}`;
+    const geoNamesUrl = `http://api.geonames.org/searchJSON?q=${city}&maxRows=1&username=ucs05`;
     try {
         const response = await axios.get(geoNamesUrl);
-        console.log("totalResultsCount",response.data.totalResultsCount);
+        console.log("Total Results Count:", response.data.totalResultsCount);
         if (response.data.geonames && response.data.geonames.length > 0) {
-            return response.data.geonames[0].geonameId;
+            const geoNameId = response.data.geonames[0].geonameId;
+            logger.info("GeoName ID:"+ geoNameId);
+            return geoNameId;
         } else {
             throw new Error('City not found');
         }
     } catch (error) {
-        console.error("Error fetching GeoName ID:", error);
+        console.error("Error fetching GeoName ID:", error.message);
         throw error;
     }
 }
+
 
 app.get('/', (req, res) => {
     res.send('Hello from Express on Vercel!');
