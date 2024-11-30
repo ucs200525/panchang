@@ -3214,3 +3214,5 @@
 2024-11-30T15:44:50.750Z [ERROR]: get sun times3: [object Object]
 2024-11-30T15:44:51.785Z [INFO]: Sunrise and Sunset for today: 06:18:25, 17:34:07
 2024-11-30T15:44:52.029Z [INFO]: Sunrise for tomorrow: 06:19:00
+2024-11-30T15:52:12.651Z [INFO]: Server is running on port 4000
+2024-11-30T16:05:39.540Z [INFO]: Server is running on port 4000
