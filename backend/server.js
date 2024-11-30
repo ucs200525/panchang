@@ -9,7 +9,7 @@ const cheerio = require('cheerio');
 const path = require('path');
 
 const app = express();
-
+const apiKey = '699522e909454a09b82d1c728fc79925'; 
 require('dotenv').config();
 
 app.use(express.json());
@@ -27,7 +27,7 @@ app.use(morgan('combined')); // Use 'combined' for detailed logs
 
 // Function to fetch coordinates and time zone based on the city name
 async function fetchCoordinates(city) {
-    const apiKey = '699522e909454a09b82d1c728fc79925'; // Your API key
+    // Your API key
     try {
         const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(city)}&key=${apiKey}`);
         if (!response.ok) {
@@ -163,12 +163,12 @@ function getCurrentDateInTimeZone(timeZone) {
 
 // Function to fetch GeoName ID based on city
 async function getGeoNameId(city) {
-    const geoNamesUrl = `http://api.geonames.org/searchJSON?q=${city}&maxRows=1&username=${geoUsername}`;
+    const opencageUrl = `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${apiKey}&no_annotations=1`;
     try {
-        const response = await axios.get(geoNamesUrl);
-        console.log("totalResultsCount",response.data.totalResultsCount);
-        if (response.data.geonames && response.data.geonames.length > 0) {
-            return response.data.geonames[0].geonameId;
+        const response = await axios.get(opencageUrl);
+        console.log("totalResultsCount", response.data.results.length);
+        if (response.data.results && response.data.results.length > 0) {
+            return response.data.results[0].geometry;
         } else {
             throw new Error('City not found');
         }
@@ -181,7 +181,7 @@ async function getGeoNameId(city) {
 app.get('/', (req, res) => {
     res.send('Hello from Express on Vercel!');
   });
-  
+
 // Route to fetch Muhurat data with dynamic city and date input
 app.post('/fetch_muhurat', async (req, res) => {
     const { city, date } = req.body;  // Get city and date from the request body
