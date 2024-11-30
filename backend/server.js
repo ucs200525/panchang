@@ -178,6 +178,10 @@ async function getGeoNameId(city) {
     }
 }
 
+app.get('/', (req, res) => {
+    res.send('Hello from Express on Vercel!');
+  });
+  
 // Route to fetch Muhurat data with dynamic city and date input
 app.post('/fetch_muhurat', async (req, res) => {
     const { city, date } = req.body;  // Get city and date from the request body
