@@ -28,8 +28,10 @@ import './pages/PanchakaMuhurth.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PachangamForm from './pages/PachangamForm';
 import PanchakaMuhurth from './pages/PanchakaMuhurth';
+
 import Combine from './pages/Combine';
 import Navbar from './components/Navbar';
+
 
 function App() {
   return (

@@ -5,8 +5,9 @@ import LoadingSpinner from '../components/LoadingSpinner'; // Import the spinner
 import { useAuth } from '../context/AuthContext';
 
 
+
 const TimeConverterApp = () => {
-  const { localCity, localDate, setCityAndDate } = useAuth();  // Use the contex
+  const { localCity, localDate,isSearching,search, setisSearching,setCityAndDate ,setPancahgamTable,setMuhuratTable } = useAuth();  // Use the contex
 
   const [cityName, setCityName] = useState('');
   const [currentDate, setCurrentDate] = useState(new Date().toISOString().substring(0, 10));
@@ -87,7 +88,7 @@ const TimeConverterApp = () => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
           try {
-            const cityResponse = await fetch(`http://localhost:4000/api/fetchCityName/${lat}/${lng}`);
+            const cityResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/fetchCityName/${lat}/${lng}`);
             if (!cityResponse.ok) {
               throw new Error('Failed to fetch city name');
             }
@@ -116,10 +117,10 @@ const TimeConverterApp = () => {
   };
 
   const Getpanchangam = async () => {
-    // setIsLoading(true);
+    setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:4000/api/getSunTimesForCity/${cityName}/${currentDate}`);
-      const response1 = await fetch(`http://localhost:4000/api/getWeekday/${currentDate}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/getSunTimesForCity/${cityName}/${currentDate}`);
+      const response1 = await fetch(`${process.env.REACT_APP_API_URL}/api/getWeekday/${currentDate}`);
 
       if (!response.ok || !response1.ok) {
         throw new Error('Failed to fetch Panchangam data');
@@ -135,9 +136,9 @@ const TimeConverterApp = () => {
       setFetchData(true);
     } catch (error) {
       setError(error.message || 'Failed to fetch Panchangam');}
-    // finally {
-    //   setIsLoading(false);
-    // }
+    finally {
+      setIsLoading(false);
+    }
   };
 
   const checkAndFetchPanchangam = async () => {
@@ -403,6 +404,7 @@ useEffect(() => {
     <div className='content'>
       
       {error && <div className="error-message">{error}</div>}
+
       <div>
         <div style={{ textAlign: 'center', margin: '20px' }}>
           <label className="entercity">Enter City Name:</label>
@@ -444,6 +446,7 @@ useEffect(() => {
       </div>
 
         </div>
+        
     </div>
 
       

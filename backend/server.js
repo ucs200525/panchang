@@ -10,9 +10,11 @@ const path = require('path');
 
 const app = express();
 
+require('dotenv').config();
 
 app.use(express.json());
-
+const port = process.env.PORT || 4000;
+const geoUsername = process.env.GEO_USERNAME || ucs05;
 // CORS Configuration
 app.use(cors({
     origin: '*', // Allow requests from any origin
@@ -161,9 +163,10 @@ function getCurrentDateInTimeZone(timeZone) {
 
 // Function to fetch GeoName ID based on city
 async function getGeoNameId(city) {
-    const geoNamesUrl = `http://api.geonames.org/searchJSON?q=${city}&maxRows=1&username=ucs05`;
+    const geoNamesUrl = `http://api.geonames.org/searchJSON?q=${city}&maxRows=1&username=${geoUsername}`;
     try {
         const response = await axios.get(geoNamesUrl);
+        console.log("totalResultsCount",response.data.totalResultsCount);
         if (response.data.geonames && response.data.geonames.length > 0) {
             return response.data.geonames[0].geonameId;
         } else {
@@ -182,16 +185,12 @@ app.post('/fetch_muhurat', async (req, res) => {
     try {
         // Get the GeoName ID for the provided city
         const geoNameId = await getGeoNameId(city);
-
         // Format the URL to include the date and GeoName ID
         const url = `https://www.drikpanchang.com/muhurat/panchaka-rahita-muhurat.html?geoname-id=${geoNameId}&date=${date}`;
-        
         // Fetch the HTML content from the website
-        const response = await axios.get(url);
-        
+        const response = await axios.get(url);  
         // Load the HTML content using cheerio
         const $ = cheerio.load(response.data);
-        
         // Extract the required data from the table
         const muhuratData = [];
         $('.dpMuhurtaRow').each((i, element) => {
@@ -281,8 +280,7 @@ app.get('/api/getSunTimesForCity/:city/:date', async (req, res) => {
     }
 });
 
-// Starting the server
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-    logger.info(`Server is running on port ${PORT}`);
+
+app.listen(port, () => {
+    logger.info(`Server is running on port ${port}`);
 });
