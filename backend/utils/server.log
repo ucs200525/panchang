@@ -3289,3 +3289,13 @@
 2024-12-01T04:51:05.111Z [INFO]: Server is running on port 4000
 2024-12-01T04:51:07.253Z [INFO]: Server is running on port 4000
 2024-12-01T04:51:19.368Z [INFO]: Server is running on port 4000
+2024-12-01T04:51:37.430Z [INFO]: Server is running on port 4000
+2024-12-01T04:52:45.116Z [INFO]: limit, remaining, reset:250024851733097600
+2024-12-01T04:52:45.155Z [ERROR]: get sun times: Vijayawada
+2024-12-01T04:52:45.156Z [ERROR]: get sun times2: 2024-12-01
+2024-12-01T04:52:45.567Z [INFO]: limit , remaining , reset :250024841733097600
+2024-12-01T04:52:45.568Z [ERROR]: get lang lat time : 16.508757380.6185089Asia/Kolkata
+2024-12-01T04:52:45.569Z [ERROR]: get sun times3: [object Object]
+2024-12-01T04:52:46.636Z [INFO]: Sunrise and Sunset for today: 06:19:00, 17:34:17
+2024-12-01T04:52:46.894Z [INFO]: Sunrise for tomorrow: 06:19:35
+2024-12-01T04:52:51.595Z [INFO]: GeoName ID:1253184
