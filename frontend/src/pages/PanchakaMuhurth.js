@@ -165,6 +165,7 @@ const PanchakaMuhurth = () => {
                     {renderTableRows(filteredData)}
                 </tbody>
             </table>
+            
         </div>
     );
 };
