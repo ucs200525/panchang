@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router(); // Use express.Router() instead of express()
 const logger = require('../utils/logger.js');
-
 const fetch = require('node-fetch'); // Make sure to install node-fetch if you haven't already
 const axios = require('axios');
 const cheerio = require('cheerio');
 const path = require('path');
+const cors = require('cors');
 
+// Enable CORS
+router.use(cors());
 
 // Function to fetch coordinates and time zone based on the city name
 async function fetchCoordinates(city) {
@@ -18,18 +20,18 @@ async function fetchCoordinates(city) {
         }
         const data = await response.json();
         if (data.results.length > 0) {
-            const {limit , remaining , reset } = data.rate;
-            logger.info("limit , remaining , reset :"+limit + remaining + reset);
             const { lat, lng } = data.results[0].geometry;
             const timeZone = data.results[0].annotations.timezone.name;
-            logger.error('get lang lat time : ' +  lat+ lng+ timeZone);
-            return { lat, lng, timeZone ,limit , remaining , reset}; // Return all required values
+            const { limit, remaining, reset } = data.rate;
+            logger.info(`Rate Limit Info - Limit: ${limit}, Remaining: ${remaining}, Reset: ${reset}`);
+            logger.info(`Coordinates: Lat - ${lat}, Lng - ${lng}, Time Zone: ${timeZone}`);
+            return { lat, lng, timeZone, limit, remaining, reset }; // Return all required values
         } else {
             throw new Error('City not found');
         }
     } catch (error) {
         logger.error('Error fetching coordinates: ' + error.message);
-        return null; 
+        return null;
     }
 }
 
@@ -43,11 +45,11 @@ async function fetchCityName(lat, lng) {
         const data = await response.json();
         if (data.results.length > 0) {
             const { limit, remaining, reset } = data.rate;
-            logger.info("limit, remaining, reset:"+ limit+ remaining+ reset);
+            logger.info(`Rate Limit Info - Limit: ${limit}, Remaining: ${remaining}, Reset: ${reset}`);
             const components = data.results[0].components;
             const city = components.city || components.town || components.village || 'Unknown city';
             const timeZone = data.results[0].annotations.timezone.name;
-            return { cityName: city, timeZone,limit, remaining, reset }; // Return city name and time zone
+            return { cityName: city, timeZone, limit, remaining, reset }; // Return city name and time zone
         } else {
             throw new Error('Location not found');
         }
@@ -56,7 +58,6 @@ async function fetchCityName(lat, lng) {
         return null;
     }
 }
-
 
 // Function to convert UTC time to local time based on time zone
 const convertToLocalTime = (utcDate, timeZone) => {
@@ -75,7 +76,7 @@ async function fetchSunTimes(lat, lng, date, timeZone) {
         const results = data.results;
 
         // Log the sunrise and sunset for today
-        logger.info('Sunrise and Sunset for today: ' + convertToLocalTime(results.sunrise, timeZone) + ', ' + convertToLocalTime(results.sunset, timeZone));
+        logger.info(`Sunrise and Sunset for today: ${convertToLocalTime(results.sunrise, timeZone)}, ${convertToLocalTime(results.sunset, timeZone)}`);
 
         // Get sunrise and sunset for today
         const sunriseToday = convertToLocalTime(results.sunrise, timeZone);
@@ -95,7 +96,7 @@ async function fetchSunTimes(lat, lng, date, timeZone) {
         const resultsTomorrow = dataTomorrow.results;
 
         // Log the sunrise for tomorrow
-        logger.info('Sunrise for tomorrow: ' + convertToLocalTime(resultsTomorrow.sunrise, timeZone));
+        logger.info(`Sunrise for tomorrow: ${convertToLocalTime(resultsTomorrow.sunrise, timeZone)}`);
 
         // Return today's and tomorrow's sunrise and sunset times
         return {
@@ -110,13 +111,12 @@ async function fetchSunTimes(lat, lng, date, timeZone) {
 }
 
 async function getSunTimesForCity(city, date) {
-    logger.error('get sun times: ' + city);
-    logger.error('get sun times2: ' + date);
+    logger.info('Fetching sun times for city: ' + city);
+    logger.info('Date: ' + date);
     let coords = await fetchCoordinates(city);
-    logger.error('get sun times3: ' + coords);
     if (coords) {
         const sunTimes = await fetchSunTimes(coords.lat, coords.lng, date, coords.timeZone);
-        return {sunTimes,coords};
+        return { sunTimes, coords };
     }
     return null;
 }
@@ -125,7 +125,7 @@ async function getSunTimesForCity(city, date) {
 function getWeekday(dateString) {
     const date = new Date(dateString);
     const options = { weekday: 'long' };
-    const week= date.toLocaleDateString('en-US', options);
+    const week = date.toLocaleDateString('en-US', options);
     return week;
 }
 
@@ -137,12 +137,10 @@ function getCurrentDateInTimeZone(timeZone) {
         day: '2-digit'
     };
     const formatter = new Intl.DateTimeFormat('en-GB', options);
-    const [{ value: day },, { value: month },, { value: year }] = formatter.formatToParts(new Date());
-    const date =`${day}-${month}-${year}`;
+    const [{ value: day }, , { value: month }, , { value: year }] = formatter.formatToParts(new Date());
+    const date = `${day}-${month}-${year}`;
     return date;
 }
-
-
 
 // Function to fetch GeoName ID based on city
 async function getGeoNameId(city) {
@@ -152,22 +150,17 @@ async function getGeoNameId(city) {
         console.log("Total Results Count:", response.data.totalResultsCount);
         if (response.data.geonames && response.data.geonames.length > 0) {
             const geoNameId = response.data.geonames[0].geonameId;
-            logger.info("GeoName ID:"+ geoNameId);
+            logger.info("GeoName ID: " + geoNameId);
             return geoNameId;
         } else {
             throw new Error('City not found');
         }
     } catch (error) {
-        console.error("Error fetching GeoName ID:", error.message);
+        logger.error("Error fetching GeoName ID:", error.message);
         throw error;
     }
 }
 
-
-router.get('/', (req, res) => {
-    res.send('Hello from Express on Vercel!');
-  });
-  
 // Route to fetch Muhurat data with dynamic city and date input
 router.post('/fetch_muhurat', async (req, res) => {
     const { city, date } = req.body;  // Get city and date from the request body
@@ -199,74 +192,43 @@ router.post('/fetch_muhurat', async (req, res) => {
         // Return the data as JSON response
         res.json(muhuratData);
     } catch (error) {
-        console.error("Error fetching Muhurat data:", error);
+        logger.error("Error fetching Muhurat data:", error.message);
         res.status(500).send('Error fetching data');
     }
 });
 
 // Define routes
+router.get('/', (req, res) => {
+    res.send('Hello from Express on Vercel!');
+});
+
 router.get('/fetchCoordinates/:city', async (req, res) => {
     const city = req.params.city;
     const coordinates = await fetchCoordinates(city);
     if (coordinates) {
         res.json(coordinates);
-        
-    }
-    
-    else {
+    } else {
         res.status(404).json({ error: 'Coordinates not found' });
     }
 });
 
 router.get('/fetchCityName/:lat/:lng', async (req, res) => {
     const { lat, lng } = req.params;
-    // logger2.info("Lat and Lang given : "+ lat+ lng );
-    const cityInfo = await fetchCityName(lat, lng);
-    if (cityInfo) {
-        // logger2.info("City Name Found: "+cityInfo);
-        res.json(cityInfo);
+    const cityName = await fetchCityName(lat, lng);
+    if (cityName) {
+        res.json(cityName);
     } else {
         res.status(404).json({ error: 'City name not found' });
     }
 });
 
-router.get('/convertToLocalTime', (req, res) => {
-    const { utcDate, timeZone } = req.query;
-    const localTime = convertToLocalTime(utcDate, timeZone);
-    res.json({ localTime });
-});
-
-router.get('/fetchSunTimes/:lat/:lng/:date', async (req, res) => {
-    const { lat, lng, date } = req.params;
-    const timeZone = req.query.timeZone; // Pass timeZone as a query parameter
-    const sunTimes = await fetchSunTimes(lat, lng, date, timeZone);
-    if (sunTimes) {
-        res.json(sunTimes);
-    } else {
-        res.status(404).json({ error: 'Sun times not found' });
-    }
-});
-
-router.get('/getWeekday/:dateString', (req, res) => {
-    const { dateString } = req.params;
-    const weekday = getWeekday(dateString);
-    res.json({ weekday });
-});
-
-router.get('/currentdateByTimeZone/:timezone', (req, res) => {
-    const { timezone } = req.params;
-    const datetoday = getCurrentDateInTimeZone(timezone);
-    res.json({ datetoday });
-});
-
-
 router.get('/getSunTimesForCity/:city/:date', async (req, res) => {
     const { city, date } = req.params;
-    const sunTimes = await getSunTimesForCity(city, date);
-    if (sunTimes) {
-        res.json(sunTimes);
+    const data = await getSunTimesForCity(city, date);
+    if (data) {
+        res.json(data);
     } else {
-        res.status(404).json({ error: 'Sun times for city not found' });
+        res.status(404).json({ error: 'Sun times not found' });
     }
 });
 
