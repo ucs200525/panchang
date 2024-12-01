@@ -205,7 +205,7 @@ router.post('/fetch_muhurat', async (req, res) => {
 });
 
 // Define routes
-router.get('/api/fetchCoordinates/:city', async (req, res) => {
+router.get('/fetchCoordinates/:city', async (req, res) => {
     const city = req.params.city;
     const coordinates = await fetchCoordinates(city);
     if (coordinates) {
@@ -218,7 +218,7 @@ router.get('/api/fetchCoordinates/:city', async (req, res) => {
     }
 });
 
-router.get('/api/fetchCityName/:lat/:lng', async (req, res) => {
+router.get('/fetchCityName/:lat/:lng', async (req, res) => {
     const { lat, lng } = req.params;
     // logger2.info("Lat and Lang given : "+ lat+ lng );
     const cityInfo = await fetchCityName(lat, lng);
@@ -230,13 +230,13 @@ router.get('/api/fetchCityName/:lat/:lng', async (req, res) => {
     }
 });
 
-router.get('/api/convertToLocalTime', (req, res) => {
+router.get('/convertToLocalTime', (req, res) => {
     const { utcDate, timeZone } = req.query;
     const localTime = convertToLocalTime(utcDate, timeZone);
     res.json({ localTime });
 });
 
-router.get('/api/fetchSunTimes/:lat/:lng/:date', async (req, res) => {
+router.get('/fetchSunTimes/:lat/:lng/:date', async (req, res) => {
     const { lat, lng, date } = req.params;
     const timeZone = req.query.timeZone; // Pass timeZone as a query parameter
     const sunTimes = await fetchSunTimes(lat, lng, date, timeZone);
@@ -247,20 +247,20 @@ router.get('/api/fetchSunTimes/:lat/:lng/:date', async (req, res) => {
     }
 });
 
-router.get('/api/getWeekday/:dateString', (req, res) => {
+router.get('/getWeekday/:dateString', (req, res) => {
     const { dateString } = req.params;
     const weekday = getWeekday(dateString);
     res.json({ weekday });
 });
 
-router.get('/api/currentdateByTimeZone/:timezone', (req, res) => {
+router.get('/currentdateByTimeZone/:timezone', (req, res) => {
     const { timezone } = req.params;
     const datetoday = getCurrentDateInTimeZone(timezone);
     res.json({ datetoday });
 });
 
 
-router.get('/api/getSunTimesForCity/:city/:date', async (req, res) => {
+router.get('/getSunTimesForCity/:city/:date', async (req, res) => {
     const { city, date } = req.params;
     const sunTimes = await getSunTimesForCity(city, date);
     if (sunTimes) {

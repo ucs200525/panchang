@@ -69,7 +69,7 @@ const PanchakaMuhurth = () => {
         }
 
         setLoading(true); // Set loading to true before fetching data
-        fetch(`${process.env.REACT_APP_API_URL}/fetch_muhurat`, {
+        fetch(`${process.env.REACT_APP_API_URL}/api/fetch_muhurat`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

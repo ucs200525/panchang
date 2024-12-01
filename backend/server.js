@@ -17,7 +17,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
 }));
 
-app.use('/', panchangRoutes);     
+app.use('/api', panchangRoutes);     
 // Logger Middleware
 app.use(morgan('combined')); // Use 'combined' for detailed logs
 
