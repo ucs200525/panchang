@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router(); // Use express.Router() instead of express()
 const cors = require('cors'); // Import the cors package
 const morgan = require('morgan'); // Import the morgan package
 const logger = require('./utils/logger'); // Import the logger
@@ -8,7 +7,6 @@ const app = express();
 const panchangRoutes = require('./routes/panchangRoutes');
 dotenv.config();
 
-app.use(router);
 app.use(express.json());
 const port = process.env.PORT || 4000;
 const geoUsername = process.env.GEO_USERNAME || ucs05;
