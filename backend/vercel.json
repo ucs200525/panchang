@@ -1,0 +1,25 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "server.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "/server.js"
+      }
+    ],
+    "env": {
+      "ALLOWED_ORIGINS": "https://localhost:3000,https://panchang-aik9.vercel.app"
+    },
+    "functions": {
+      "server.js": {
+        "memory": 512,
+        "maxDuration": 10
+      }
+    }
+  }
+  
