@@ -12,20 +12,17 @@ const app = express();
 // Middleware for parsing JSON requests
 app.use(express.json());
 
-// CORS Configuration (restrict origins for production)
-const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['*']; // In production, list specific domains
 
-app.use(cors({
-    origin: function (origin, callback) {
-        if (allowedOrigins.includes('*') || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+const allowedOrigins = ['http://localhost:3000', 'https://panchang-aik9.vercel.app'];
+
+const corsOption = {
+    origin:allowedOrigins, // allowed origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // allowed methods
+    credentials: true, // allow credentials (cookies, authorization headers, etc.)
+  };
+  
+  app.use(cors(corsOption)); // apply CORS middleware
+
 
 // Logger Middleware for detailed logs
 app.use(morgan('combined'));
