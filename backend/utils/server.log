@@ -3240,3 +3240,37 @@
 2024-11-30T16:42:12.426Z [INFO]: Server is running on port 4000
 2024-11-30T16:42:29.260Z [INFO]: Server is running on port 4000
 2024-11-30T16:42:32.287Z [INFO]: Server is running on port 4000
+2024-12-01T04:39:08.115Z [INFO]: Server is running on port 4000
+2024-12-01T04:39:14.799Z [INFO]: limit, remaining, reset:250024971733097600
+2024-12-01T04:39:14.843Z [ERROR]: get sun times: Vijayawada
+2024-12-01T04:39:14.845Z [ERROR]: get sun times2: 2024-12-01
+2024-12-01T04:39:15.173Z [INFO]: limit , remaining , reset :250024961733097600
+2024-12-01T04:39:15.174Z [ERROR]: get lang lat time : 16.508757380.6185089Asia/Kolkata
+2024-12-01T04:39:15.175Z [ERROR]: get sun times3: [object Object]
+2024-12-01T04:39:16.354Z [INFO]: Sunrise and Sunset for today: 06:19:00, 17:34:17
+2024-12-01T04:39:16.611Z [INFO]: Sunrise for tomorrow: 06:19:35
+2024-12-01T04:39:45.773Z [INFO]: limit, remaining, reset:250024941733097600
+2024-12-01T04:39:45.817Z [ERROR]: get sun times: Vijayawada
+2024-12-01T04:39:45.820Z [ERROR]: get sun times2: 2024-12-01
+2024-12-01T04:39:45.839Z [INFO]: limit, remaining, reset:250024951733097600
+2024-12-01T04:39:45.902Z [ERROR]: get sun times: Vijayawada
+2024-12-01T04:39:45.905Z [ERROR]: get sun times2: 2024-12-01
+2024-12-01T04:39:46.176Z [INFO]: limit , remaining , reset :250024931733097600
+2024-12-01T04:39:46.177Z [ERROR]: get lang lat time : 16.508757380.6185089Asia/Kolkata
+2024-12-01T04:39:46.178Z [ERROR]: get sun times3: [object Object]
+2024-12-01T04:39:46.215Z [INFO]: limit , remaining , reset :250024921733097600
+2024-12-01T04:39:46.216Z [ERROR]: get lang lat time : 16.508757380.6185089Asia/Kolkata
+2024-12-01T04:39:46.217Z [ERROR]: get sun times3: [object Object]
+2024-12-01T04:39:46.917Z [INFO]: Sunrise and Sunset for today: 06:19:00, 17:34:17
+2024-12-01T04:39:47.131Z [INFO]: Sunrise and Sunset for today: 06:19:00, 17:34:17
+2024-12-01T04:39:47.314Z [INFO]: Sunrise for tomorrow: 06:19:35
+2024-12-01T04:39:47.516Z [INFO]: Sunrise for tomorrow: 06:19:35
+2024-12-01T04:39:55.176Z [INFO]: limit, remaining, reset:250024911733097600
+2024-12-01T04:39:55.209Z [ERROR]: get sun times: Vijayawada
+2024-12-01T04:39:55.213Z [ERROR]: get sun times2: 2024-12-01
+2024-12-01T04:39:55.581Z [INFO]: limit , remaining , reset :250024901733097600
+2024-12-01T04:39:55.581Z [ERROR]: get lang lat time : 16.508757380.6185089Asia/Kolkata
+2024-12-01T04:39:55.582Z [ERROR]: get sun times3: [object Object]
+2024-12-01T04:39:56.331Z [INFO]: Sunrise and Sunset for today: 06:19:00, 17:34:17
+2024-12-01T04:39:56.566Z [INFO]: Sunrise for tomorrow: 06:19:35
+2024-12-01T04:40:03.274Z [INFO]: GeoName ID:1253184
