@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-
+import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner'; // Import the spinner component
 
 const PanchakaMuhurth = () => {
     
-    const [city, setCity] = useState("Vijayawada");
+    const [city, setCity] = useState('');
     const [date, setDate] = useState(() => {
         const today = new Date();
         const day = String(today.getDate()).padStart(2, '0');
@@ -13,6 +13,7 @@ const PanchakaMuhurth = () => {
         return `${day}/${month}/${year}`; // Format: dd/mm/yyyy
     });
 
+    const { localCity, localDate, setCityAndDate  } = useAuth();
     const [allMuhuratData, setAllMuhuratData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [showAll, setShowAll] = useState(true); // State to toggle between all rows and filtered rows
@@ -116,6 +117,12 @@ const PanchakaMuhurth = () => {
             </tr>
         ));
     };
+    useEffect(() => {
+        // Sync the state with AuthContext whenever city or date changes
+        if (city !== localCity || date !== localDate) {
+            setCityAndDate(city, date);
+        }
+    }, [city, date, localCity, localDate, setCityAndDate]);
 
     useEffect(() => {
         if (filteredData.length > 0) {

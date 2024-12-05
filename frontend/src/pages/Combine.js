@@ -5,8 +5,8 @@ const Combine = () => {
     const [muhuratData, setMuhuratData] = useState([]);
     const [panchangamData, setPanchangamData] = useState([]);
     const [finalData, setFinalData] = useState([]);
-    const {localCity, localDate, setCityAndDate,setisSearching,search } = useAuth();  // Use the contex
-    const [city, setCity] = useState("Vijayawada");
+    const { localCity, localDate, setCityAndDate  } = useAuth();
+    const [city, setCity] = useState('');
     const [isSearching, setIsSearching] = useState(false);
 
     const [date, setDate] = useState(() => {
@@ -81,39 +81,41 @@ const splitInterval = (interval, baseDate) => {
         console.log("Valid Interval:", start, end);
         return true;
     };
-
- // Combine Muhurat and Panchangam data
+// Combine Muhurat and Panchangam data
 useEffect(() => {
     const today = new Date();
     const mergedData = [];
-    let i=0;
+    let i = 0;
     console.log("Processing Panchangam Data...");
 
     // Iterate through Muhurat Data first
     muhuratData.forEach((muhuratItem) => {
         const [muhuratStart, muhuratEnd] = splitInterval(muhuratItem.time, today);
-        console.log("muhuratStart: ",muhuratStart);
-        console.log("muhuratEnd: ",muhuratEnd);
+        console.log("muhuratStart: ", muhuratStart);
+        console.log("muhuratEnd: ", muhuratEnd);
         if (muhuratStart && muhuratEnd && validateInterval(muhuratStart, muhuratEnd)) {
             console.log("Valid Muhurat Interval: ", muhuratItem);
 
-            // Temporary array to collect weekday values for this Muhurat
+            // Temporary array to collect weekday objects for this Muhurat
             const weekdaysArray = [];
 
             // Now iterate through Panchangam data
             panchangamData.forEach((panchangamItem) => {
                 const timeInterval = panchangamItem.timeInterval1; // Only use timeInterval1
                 const [start, end] = splitInterval(timeInterval, today);
-                console.log("CheckOKK: ",start);
-                console.log("endcheck: ",end);
+                console.log("CheckOKK: ", start);
+                console.log("endcheck: ", end);
                 if (start && end && validateInterval(start, end)) {
                     console.log("Valid Panchangam Interval: ", panchangamItem);
 
                     // Check if Panchangam falls within any Muhurat interval
-                    if (start <= muhuratEnd && end>=muhuratStart) {
-                        // Add unique weekday values to the temporary array
-                        if (!weekdaysArray.includes(panchangamItem.weekday)) {
-                            weekdaysArray.push(panchangamItem.weekday);
+                    if (start <= muhuratEnd && end >= muhuratStart) {
+                        // Add unique weekday values as objects to the temporary array
+                        if (!weekdaysArray.find((item) => item.weekday === panchangamItem.weekday)) {
+                            weekdaysArray.push({
+                                weekday: panchangamItem.weekday,
+                                time: `${start.toLocaleTimeString()} - ${end.toLocaleTimeString()}`,
+                            });
                         }
                     }
                 } else {
@@ -123,11 +125,11 @@ useEffect(() => {
 
             // After collecting weekdays, add to mergedData
             mergedData.push({
-                sno:i+1,
+                sno: i + 1,
                 type: "Muhurat",
                 description: `${muhuratItem.muhurat} - ${muhuratItem.category}`,
                 timeInterval: muhuratItem.time,
-                weekday: weekdaysArray.join(", ") || "-", // Join weekdays with commas
+                weekdays: weekdaysArray.length > 0 ? weekdaysArray : [{ weekday: "-", time: "-" }], // Add as nested rows
             });
             i++;
         } else {
@@ -136,17 +138,16 @@ useEffect(() => {
     });
 
     console.log("Processing Muhurat Data...");
-
     console.log("Final Merged Data: ", mergedData);
     setFinalData(mergedData);
 }, [muhuratData, panchangamData]);
 
-    const getMuhuratData = () => {
-        setisSearching(true);
-        setCityAndDate(city,date);
-        sessionStorage.setItem('search', true);
+    // const getMuhuratData = () => {
+    //     setisSearching(true);
+    //     setCityAndDate(city,date);
+    //     sessionStorage.setItem('search', true);
 
-    };
+    // };
 
     // useEffect to handle side effects
     useEffect(() => {
@@ -175,10 +176,14 @@ useEffect(() => {
     return (
         <div style={{ padding: "20px" }}>
             <h1 style={{ textAlign: "center" }}>Combined Good Timings</h1>
-     
-           
+    
             {finalData.length > 0 ? (
-                <table border="1" cellSpacing="0" cellPadding="5" style={{ width: "100%", textAlign: "left" }}>
+                <table
+                    border="1"
+                    cellSpacing="0"
+                    cellPadding="5"
+                    style={{ width: "100%", textAlign: "left" }}
+                >
                     <thead>
                         <tr>
                             <th>SNO</th>
@@ -195,16 +200,36 @@ useEffect(() => {
                                 <td>{item.type}</td>
                                 <td>{item.description}</td>
                                 <td>{item.timeInterval}</td>
-                                <td>{item.weekday}</td>
+                                <td>
+                                    {item.weekdays.length === 1 && item.weekdays[0].weekday === "-" ? (
+                                        "-" // Display "-" when no weekdays are available
+                                    ) : (
+                                        <table style={{ width: "100%", border: "none" }}>
+                                            <tbody>
+                                                {item.weekdays.map((weekdayItem, subIndex) => (
+                                                    <tr key={subIndex}>
+                                                        <td style={{ border: "none", padding: "0" }}>
+                                                            <strong>{weekdayItem.weekday}</strong>:{" "}
+                                                            {weekdayItem.time}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    )}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             ) : (
-                <p style={{ textAlign: "center" }}>No data available. Please fetch data from the relevant pages.</p>
+                <p style={{ textAlign: "center" }}>
+                    No data available. Please fetch data from the relevant pages.
+                </p>
             )}
         </div>
     );
+    
 };
 
 export default Combine;

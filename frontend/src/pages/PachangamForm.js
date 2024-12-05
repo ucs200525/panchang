@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 
 
 const TimeConverterApp = () => {
-  const { localCity, localDate,isSearching,search, setisSearching,setCityAndDate ,setPancahgamTable,setMuhuratTable } = useAuth();  // Use the contex
+  const { localCity, localDate, setCityAndDate  } = useAuth();
 
   const [cityName, setCityName] = useState('');
   const [currentDate, setCurrentDate] = useState(new Date().toISOString().substring(0, 10));
@@ -144,9 +144,10 @@ const TimeConverterApp = () => {
   const checkAndFetchPanchangam = async () => {
     if (cityName && currentDate) {
       await Getpanchangam();
+      setCityAndDate(cityName,currentDate);
     } else {
-      console.log("hi in else block");
       await autoGeolocation();
+      setCityAndDate(cityName,currentDate);
     }
   };
 
@@ -344,26 +345,13 @@ useEffect(() => {
         value2: '',
         isColored: false 
       });
-    setTableData(newTableData);
-  };
+  // Filter based on `showNonBlue` and set table data
+  const filteredData = showNonBlue
+    ? newTableData.filter((row) => !isBlue(row))
+    : newTableData;
 
-  const showNonBlueRows = async () => {
-    const table = document.getElementById("tableToCapture");
-    const rows = table.getElementsByTagName("tr");
-  
-    for (let i = 1; i < rows.length; i++) { // Skip the header row
-      const weekdayCell = rows[i].cells[2]; // Assuming "Weekday" is the 3rd column (index 2)
-      const cellStyle = window.getComputedStyle(weekdayCell);
-  
-      if (cellStyle.backgroundColor === "rgb(0, 32, 96)") { // Blue color in RGB
-        rows[i].style.display = "none"; // Hide the row
-      } else {
-        rows[i].style.display = ""; // Ensure non-blue rows are visible
-      }
-    }
+  setTableData(filteredData);
   };
-  
-
 
   // Function to determine if a row is blue
   const isBlue = (row) => {
@@ -377,6 +365,7 @@ useEffect(() => {
 
   useEffect(() => {
     console.log(`Currently showing: ${checkCurrentState()}`);
+    updateTable();
     // Perform any additional actions when the state changes
   }, [showNonBlue]);
 
@@ -476,8 +465,6 @@ useEffect(() => {
               }}>
                   {row.weekday} {/* Displays the corresponding weekday value */}
               </td>
-
-
               <td>{row.start2}</td>
               <td>{row.end2}</td>
               <td>{row.sNo}</td>
