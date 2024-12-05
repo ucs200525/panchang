@@ -107,6 +107,11 @@ const PanchakaMuhurth = () => {
             return;
         }
 
+        if (!city ) {
+            alert("City value is not correct,Please Enter Manually.")
+            return;
+        }
+
         setLoading(true); // Set loading to true before fetching data
         fetch(`${process.env.REACT_APP_API_URL}/api/fetch_muhurat`, {
             method: 'POST',
