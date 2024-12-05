@@ -4,7 +4,6 @@ import LoadingSpinner from '../components/LoadingSpinner'; // Import the spinner
 import html2canvas from 'html2canvas';
 
 const PanchakaMuhurth = () => {
-    
     const [city, setCity] = useState('');
     const [date, setDate] = useState(() => {
         const today = new Date();
@@ -14,27 +13,23 @@ const PanchakaMuhurth = () => {
         return `${day}/${month}/${year}`; // Format: dd/mm/yyyy
     });
 
-    const { localCity, localDate, setCityAndDate  } = useAuth();
+    const { localCity, localDate, setCityAndDate } = useAuth();
     const [allMuhuratData, setAllMuhuratData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
-    const [showAll, setShowAll] = useState(true); // State to toggle between all rows and filtered rows
-    const [loading, setLoading] = useState(false); // Add loading state
-
-    // const saveToLocalStorage = (data) => {
-    //     localStorage.setItem("muhurats", JSON.stringify(data));
-    // };
+    const [showAll, setShowAll] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const createDummyTable = useCallback(() => {
         const dummyTable = filteredData.map((row) => {
             const [startTime, endTime] = row.time.split(" to ");
-
             let endTimeWithoutDate, endDatePart;
 
             if (endTime.includes(", ")) {
                 [endTimeWithoutDate, endDatePart] = endTime.split(", ");
             } else {
-                endTimeWithoutDate = endTime; // If no comma, the entire string is the time
-                endDatePart = null;          // No date part available
+                endTimeWithoutDate = endTime;
+                endDatePart = null;
             }
 
             const currentDate = new Date(date);
@@ -59,55 +54,82 @@ const PanchakaMuhurth = () => {
             };
         });
 
-        // Save the dummy table in sessionStorage
         sessionStorage.setItem("muhurats", JSON.stringify(dummyTable));
         console.log("Dummy Table Saved: ", dummyTable);
-    }, [filteredData, date]); // Memoize with filteredData and date as dependencies
+    }, [filteredData, date]);
 
-    const getMuhuratData = () => {
-        if (!city || !date) {
-            alert("Please enter both city and date.");
-            return;
-        }
+    const getMuhuratData = async () => {
 
-        setLoading(true); // Set loading to true before fetching data
-        fetch(`${process.env.REACT_APP_API_URL}/api/fetch_muhurat`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ city, date })
-        })
-            .then(response => response.json())
-            .then(data => {
-                setAllMuhuratData(data);  // Store all the muhurat data
-                console.log("Complete data", data);
-                setFilteredData(data);  // Initially display all data
-                setShowAll(true);       // Reset to showing all rows
-                createDummyTable(); // Create the dummy table and save to localStorage
-                setLoading(false);  // Set loading to false after data is fetched
-            })
-            .catch(error => {
-                console.error("Error fetching data:", error);
-                setLoading(false);  // Set loading to false in case of an error
+        setLoading(true);
+        setError('');
+
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/fetch_muhurat`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ city, date })
             });
+            const data = await response.json();
+            setAllMuhuratData(data);
+            setFilteredData(data);
+            setShowAll(true);
+            createDummyTable();
+        } catch (err) {
+            setError(err.message || "Error fetching muhurat data.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const autoGeolocation = async () => {
+        if (navigator.geolocation) {
+            setLoading(true);
+            setError('');
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    try {
+                        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/fetchCityName/${lat}/${lng}`);
+                        if (!response.ok) throw new Error('Failed to fetch city name');
+                        const data = await response.json();
+                        const cityName = data.cityName;
+                        setCity(cityName);
+                        await getMuhuratData();
+                        setCityAndDate(cityName, date);
+                    } catch (err) {
+                        setError(err.message || "Error fetching city name.");
+                    } finally {
+                        setLoading(false);
+                    }
+                },
+                (err) => {
+                    setError('Geolocation error: ' + err.message);
+                    setLoading(false);
+                }
+            );
+        } else {
+            setError('Geolocation is not supported by this browser.');
+        }
     };
 
     const filterGoodTimings = () => {
         const goodTimings = allMuhuratData.filter(item => item.category.toLowerCase() === "good");
-        setFilteredData(goodTimings);  // Render the table with filtered data
-        setShowAll(false);             // Switch to filtered view
-        createDummyTable(); // Create the dummy table for filtered data
+        setFilteredData(goodTimings);
+        setShowAll(false);
+        createDummyTable();
     };
 
     const toggleShowAllRows = () => {
         if (showAll) {
-            filterGoodTimings(); // If currently showing all rows, filter "Good Timings"
+            filterGoodTimings();
         } else {
-            setFilteredData(allMuhuratData); // Reset to show all rows
-            createDummyTable(); // Create the dummy table for all data
+            setFilteredData(allMuhuratData);
+            createDummyTable();
         }
-        setShowAll(!showAll); // Toggle the state
+        setShowAll(!showAll);
     };
 
     const renderTableRows = (data) => {
@@ -118,8 +140,8 @@ const PanchakaMuhurth = () => {
             </tr>
         ));
     };
+
     useEffect(() => {
-        // Sync the state with AuthContext whenever city or date changes
         if (city !== localCity || date !== localDate) {
             setCityAndDate(city, date);
         }
@@ -127,11 +149,10 @@ const PanchakaMuhurth = () => {
 
     useEffect(() => {
         if (filteredData.length > 0) {
-            createDummyTable(); // Save the dummy table to localStorage every time the filtered data is updated
+            createDummyTable();
         }
-    }, [filteredData, createDummyTable]); // Now including createDummyTable in the dependency array
+    }, [filteredData, createDummyTable]);
 
-     // Screenshot function
     const takeScreenshot = async () => {
         const element = document.getElementById('muhurats-table');
         const canvas = await html2canvas(element);
@@ -165,13 +186,15 @@ const PanchakaMuhurth = () => {
                     onChange={(e) => setDate(e.target.value)}
                 />
                 <br />
-                <button onClick={getMuhuratData}>Get Muhurat</button>
+                <button onClick={autoGeolocation}>Get Muhurat</button>
                 <button onClick={toggleShowAllRows}>
                     {showAll ? "Good Timings Only" : "Show All Rows"}
                 </button>
+                
             </div>
 
-            {loading && <LoadingSpinner />} {/* Show the spinner when loading */}
+            {loading && <LoadingSpinner />}
+            {error && <p className="error">{error}</p>}
 
             <h2>Result</h2>
             <table id="muhurats-table" border="1" cellspacing="0" cellpadding="5">
@@ -186,10 +209,10 @@ const PanchakaMuhurth = () => {
                 </tbody>
             </table>
             <div className="download-button">
-            <button className="share-button" onClick={takeScreenshot}>
-                <i className="far fa-share-square"></i>
-            </button>
-          </div>
+                <button className="share-button" onClick={takeScreenshot}>
+                    <i className="far fa-share-square"></i>
+                </button>
+            </div>
         </div>
     );
 };
