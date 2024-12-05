@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner'; // Import the spinner component
+import html2canvas from 'html2canvas';
 
 const PanchakaMuhurth = () => {
     
@@ -130,6 +131,18 @@ const PanchakaMuhurth = () => {
         }
     }, [filteredData, createDummyTable]); // Now including createDummyTable in the dependency array
 
+     // Screenshot function
+    const takeScreenshot = async () => {
+        const element = document.getElementById('muhurats-table');
+        const canvas = await html2canvas(element);
+        const img = canvas.toDataURL('image/png');
+
+        const link = document.createElement('a');
+        link.href = img;
+        link.download = `${city} Panchangam.png`;
+        link.click();
+    };
+
     return (
         <div className="PanchakaMuhurthContent">
             <h1>Panchaka Muhurat</h1>
@@ -172,7 +185,11 @@ const PanchakaMuhurth = () => {
                     {renderTableRows(filteredData)}
                 </tbody>
             </table>
-            
+            <div className="download-button">
+            <button className="share-button" onClick={takeScreenshot}>
+                <i className="far fa-share-square"></i>
+            </button>
+          </div>
         </div>
     );
 };

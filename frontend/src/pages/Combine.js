@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from '../context/AuthContext';
+import html2canvas from 'html2canvas';
 
 const Combine = () => {
     const [muhuratData, setMuhuratData] = useState([]);
@@ -173,12 +174,23 @@ useEffect(() => {
         return `${hour12}:${minuteFormatted} ${period}`;
     };
 
+    const takeScreenshot = async () => {
+        const element = document.getElementById('muhurats-table');
+        const canvas = await html2canvas(element);
+        const img = canvas.toDataURL('image/png');
+
+        const link = document.createElement('a');
+        link.href = img;
+        link.download = `${city} Panchangam.png`;
+        link.click();
+    };
+
     return (
         <div style={{ padding: "20px" }}>
             <h1 style={{ textAlign: "center" }}>Combined Good Timings</h1>
     
             {finalData.length > 0 ? (
-                <table
+                <table id="muhurats-table"
                     border="1"
                     cellSpacing="0"
                     cellPadding="5"
@@ -227,6 +239,11 @@ useEffect(() => {
                     No data available. Please fetch data from the relevant pages.
                 </p>
             )}
+                        <div className="download-button">
+            <button className="share-button" onClick={takeScreenshot}>
+                <i className="far fa-share-square"></i>
+            </button>
+          </div>
         </div>
     );
     
