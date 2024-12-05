@@ -236,7 +236,7 @@ useEffect(() => {
                 </table>
             ) : (
                 <p style={{ textAlign: "center" }}>
-                    No data available. Please fetch data from the relevant pages.
+                    No data available. Please fetch data from the relevant pages.(Select Good Timings only option)
                 </p>
             )}
                         <div className="download-button">
