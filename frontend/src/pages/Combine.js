@@ -18,10 +18,10 @@ const Combine = () => {
         return `${day}/${month}/${year}`; // Format: dd/mm/yyyy
     });
     
-    // Retrieve data from localStorage
+    // Retrieve data from sessionStorage
     useEffect(() => {
-        const storedMuhuratData = localStorage.getItem("muhurats");
-        const storedPanchangamData = localStorage.getItem("panchangamTableData");
+        const storedMuhuratData = sessionStorage.getItem("muhurats");
+        const storedPanchangamData = sessionStorage.getItem("panchangamTableData");
 
         if (storedMuhuratData) {
             setMuhuratData(JSON.parse(storedMuhuratData));

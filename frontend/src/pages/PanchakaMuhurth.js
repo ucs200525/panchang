@@ -59,8 +59,8 @@ const PanchakaMuhurth = () => {
             };
         });
 
-        // Save the dummy table in localStorage
-        localStorage.setItem("muhurats", JSON.stringify(dummyTable));
+        // Save the dummy table in sessionStorage
+        sessionStorage.setItem("muhurats", JSON.stringify(dummyTable));
         console.log("Dummy Table Saved: ", dummyTable);
     }, [filteredData, date]); // Memoize with filteredData and date as dependencies
 

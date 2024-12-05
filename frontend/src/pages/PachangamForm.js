@@ -214,8 +214,8 @@ useEffect(() => {
           }
       }
 
-      // Store the formatted data in localStorage
-      localStorage.setItem("panchangamTableData", JSON.stringify(dummyData));
+      // Store the formatted data in sessionStorage
+      sessionStorage.setItem("panchangamTableData", JSON.stringify(dummyData));
       console.log("Formatted Dummy Data:", dummyData);
   }
 }, [tableData]);
