@@ -3,8 +3,7 @@ import html2canvas from 'html2canvas';
 import { findClosestDay } from '../components/weekdayColumn'; // Import the new component
 import LoadingSpinner from '../components/LoadingSpinner'; // Import the spinner component
 import { useAuth } from '../context/AuthContext';
-
-
+import TableScreenshot from '../components/TableScreenshot';
 
 const TimeConverterApp = () => {
   const { localCity, localDate, setCityAndDate  } = useAuth();
@@ -123,6 +122,7 @@ const TimeConverterApp = () => {
       const response1 = await fetch(`${process.env.REACT_APP_API_URL}/api/getWeekday/${currentDate}`);
 
       if (!response.ok || !response1.ok) {
+        
         throw new Error('Failed to fetch Panchangam data');
       }
 
@@ -267,7 +267,7 @@ useEffect(() => {
         "Monday": [0, 5, 12, 13, 21, 26, 29],
         "Tuesday": [2, 3, 7, 8, 9, 11, 12, 13, 14, 15, 18, 20, 21, 22,24],
         "Wednesday": [0, 1, 4, 5, 6, 7, 9, 19, 27, 29], //28-
-        "Thursday": [2, 5, 8, 11,13, 14, 15, 16, 18, 19, 20, 23, 24, 27, 28],
+        "Thursday": [2, 5, 8,  14, 15, 16, 18, 19, 20, 23, 24, 27, 28],
         "Friday": [1, 4, 6, 8, 14, 16, 18, 19, 22, 23, 24, 25, 26, 28],
         "Saturday": [0, 8, 9, 11, 12, 17, 22, 23, 25],
         "Sunday": [2, 3, 4, 5, 10, 14, 16, 19, 21, 23,24,25, 28]
@@ -374,71 +374,91 @@ useEffect(() => {
     setShowNonBlue((prev) => !prev);
   };
 
- // Screenshot function
-  const takeScreenshot = async () => {
-    const element = document.getElementById('tableToCapture');
-    const canvas = await html2canvas(element);
-    const img = canvas.toDataURL('image/png');
-
-    const link = document.createElement('a');
-    link.href = img;
-    link.download = `${cityName} Panchangam.png`;
-    link.click();
-  };
+ 
   if (isLoading) {
     return <LoadingSpinner />; // Show spinner when loading
   }
 
   return (
-    <div className='content'>
-      
+    <div className="content">
       {error && <div className="error-message">{error}</div>}
-
+  
       <div>
-        <div style={{ textAlign: 'center', margin: '20px' }}>
+        <div style={{ textAlign: "center", margin: "20px" }}>
           <label className="entercity">Enter City Name:</label>
-          <input className="city"type="text" value={cityName} onChange={(e) => setCityName(e.target.value)} />
+          <input
+            className="city"
+            type="text"
+            value={cityName}
+            onChange={(e) => setCityName(e.target.value)}
+          />
           <label className="date">Enter Date:</label>
-          <input className="enterdate"type="date" value={currentDate} onChange={(e) => setCurrentDate(e.target.value)} />
-          
-          
-          <button className="get-pnachangam-button" onClick={checkAndFetchPanchangam}>Get Panchangam</button>
+          <input
+            className="enterdate"
+            type="date"
+            value={currentDate}
+            onChange={(e) => setCurrentDate(e.target.value)}
+          />
+          <button className="get-panchangam-button" onClick={checkAndFetchPanchangam}>
+            Get Panchangam
+          </button>
         </div>
-
-        <div style={{ textAlign: 'center', margin: '20px' }}>
+  
+        <div style={{ textAlign: "center", margin: "20px" }}>
           <label className="sun">Sunrise Today:</label>
-          <input className="sun" type="time" value={sunriseToday} onChange={(e) => setSunriseToday(e.target.value)} />
+          <input
+            className="sun"
+            type="time"
+            value={sunriseToday}
+            onChange={(e) => setSunriseToday(e.target.value)}
+          />
           <label className="sun"> Sunset Today:</label>
-          <input className="sun" type="time" value={sunsetToday} onChange={(e) => setSunsetToday(e.target.value)} />
+          <input
+            className="sun"
+            type="time"
+            value={sunsetToday}
+            onChange={(e) => setSunsetToday(e.target.value)}
+          />
           <label className="sun">Sunrise Tomorrow:</label>
-          <input className="sun" type="time" value={sunriseTmrw} onChange={(e) => setSunriseTmrw(e.target.value)} />
+          <input
+            className="sun"
+            type="time"
+            value={sunriseTmrw}
+            onChange={(e) => setSunriseTmrw(e.target.value)}
+          />
           <label className="sun">Weekday:</label>
-          <input className="sun" type="text" value={weekday} onChange={(e) => setWeekday(e.target.value)} />
-          <button className="sun" onClick={handleUpdateTableClick}>Update Table</button>
-          <button className="format" onClick={() => {
-            setIs12HourFormat(!is12HourFormat);
-            handleUpdateTableClick();
-        }}>
-            {is12HourFormat ?  'Switch to 24-hour' :  'Switch to 12-hour'}
-        </button>
-
-        <button onClick={toggleShowNonBlue}>
-        {showNonBlue ? "Show All Rows" : "Show Good Timings Only "}
-        </button>
-
-      <div className="information">
-        <p>*</p>
-        <div className="color-box" style={{ backgroundColor: "rgb(0, 32, 96)" }}></div>
-        <div className="info">
-          is considered as <strong>ashubh</strong> (inauspicious).
+          <input
+            className="sun"
+            type="text"
+            value={weekday}
+            onChange={(e) => setWeekday(e.target.value)}
+          />
+          <button className="sun" onClick={handleUpdateTableClick}>
+            Update Table
+          </button>
+          <button
+            className="format"
+            onClick={() => {
+              setIs12HourFormat(!is12HourFormat);
+              handleUpdateTableClick();
+            }}
+          >
+            {is12HourFormat ? "Switch to 24-hour" : "Switch to 12-hour"}
+          </button>
+          <button onClick={toggleShowNonBlue}>
+            {showNonBlue ? "Show All Rows" : "Show Good Timings Only"}
+          </button>
+  
+          <div className="information">
+            <p>*</p>
+            <div className="color-box" style={{ backgroundColor: "rgb(0, 32, 96)" }}></div>
+            <div className="info">
+              is considered as <strong>ashubh</strong> (inauspicious).
+            </div>
+          </div>
         </div>
       </div>
-
-        </div>
-        
-    </div>
-
-      
+  
       <table id="tableToCapture">
         <thead>
           <tr>
@@ -448,39 +468,42 @@ useEffect(() => {
             <th>Start</th>
             <th>End</th>
             <th>S.No</th>
-            <th></th>
-            <th></th>
+            <th>Value 1</th>
+            <th>Value 2</th>
           </tr>
         </thead>
         <tbody>
           {tableData
-          .filter((row) => !showNonBlue || !isBlue(row)) 
-          .map((row, index) => (
-            <tr key={index}  >
-              <td>{row.start1}</td>
-              <td>{row.end1}</td>
-              <td style={{
-                  backgroundColor: row.isWednesdayColored ? 'yellow' : row.isColored ?'#002060' : 'transparent',
-                  color: row.isWednesdayColored || row.isColored ? 'white' : 'black' // Set text color to white if background is yellow or blue
-              }}>
-                  {row.weekday} {/* Displays the corresponding weekday value */}
-              </td>
-              <td>{row.start2}</td>
-              <td>{row.end2}</td>
-              <td>{row.sNo}</td>
-              <td>{row.value1}</td>
-              <td>{row.value2}</td>
-            </tr>
-          ))}
+            .filter((row) => !showNonBlue || !isBlue(row))
+            .map((row, index) => (
+              <tr key={index}>
+                <td>{row.start1}</td>
+                <td>{row.end1}</td>
+                <td
+                  style={{
+                    backgroundColor: row.isWednesdayColored
+                      ? "yellow"
+                      : row.isColored
+                      ? "#002060"
+                      : "transparent",
+                    color: row.isWednesdayColored || row.isColored ? "white" : "black",
+                  }}
+                >
+                  {row.weekday}
+                </td>
+                <td>{row.start2}</td>
+                <td>{row.end2}</td>
+                <td>{row.sNo}</td>
+                <td>{row.value1}</td>
+                <td>{row.value2}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
-      <div className="download-button">
-            <button className="share-button" onClick={takeScreenshot}>
-                <i className="far fa-share-square"></i>
-            </button>
-          </div>
+  
+      <TableScreenshot tableId="tableToCapture" city={cityName} />
     </div>
   );
-};
+  };
 
 export default TimeConverterApp;

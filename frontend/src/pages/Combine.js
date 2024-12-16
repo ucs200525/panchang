@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from '../context/AuthContext';
 import html2canvas from 'html2canvas';
+import TableScreenshot from '../components/TableScreenshot';
 
 const Combine = () => {
     const [muhuratData, setMuhuratData] = useState([]);
@@ -162,29 +163,19 @@ useEffect(() => {
         }
     }, [isSearching]);
 
-    // Helper function to format time without seconds
-    const formatTime = (date) => {
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        const period = hours >= 12 ? "PM" : "AM";
-        const hour12 = hours % 12 || 12; // Convert 24-hour to 12-hour format
-        const minuteFormatted = minutes < 10 ? `0${minutes}` : minutes;
+    // // Helper function to format time without seconds
+    // const formatTime = (date) => {
+    //     const hours = date.getHours();
+    //     const minutes = date.getMinutes();
+    //     const period = hours >= 12 ? "PM" : "AM";
+    //     const hour12 = hours % 12 || 12; // Convert 24-hour to 12-hour format
+    //     const minuteFormatted = minutes < 10 ? `0${minutes}` : minutes;
 
-        console.log("Formatted Time: ", `${hour12}:${minuteFormatted} ${period}`);
-        return `${hour12}:${minuteFormatted} ${period}`;
-    };
+    //     console.log("Formatted Time: ", `${hour12}:${minuteFormatted} ${period}`);
+    //     return `${hour12}:${minuteFormatted} ${period}`;
+    // };
 
-    const takeScreenshot = async () => {
-        const element = document.getElementById('muhurats-table');
-        const canvas = await html2canvas(element);
-        const img = canvas.toDataURL('image/png');
-
-        const link = document.createElement('a');
-        link.href = img;
-        link.download = `${city} Panchangam.png`;
-        link.click();
-    };
-
+ 
     return (
         <div style={{ padding: "20px" }}>
             <h1 style={{ textAlign: "center" }}>Combined Good Timings</h1>
@@ -239,11 +230,7 @@ useEffect(() => {
                     No data available. Please fetch data from the relevant pages.(Select Good Timings only option)
                 </p>
             )}
-                        <div className="download-button">
-            <button className="share-button" onClick={takeScreenshot}>
-                <i className="far fa-share-square"></i>
-            </button>
-          </div>
+                 <TableScreenshot tableId="muhurats-table" city={city} />
         </div>
     );
     

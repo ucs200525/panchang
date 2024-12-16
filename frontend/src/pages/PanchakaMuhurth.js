@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner'; // Import the spinner component
-import html2canvas from 'html2canvas';
+import TableScreenshot from '../components/TableScreenshot';
+import CityAndDateInput from '../components/CityAndDateInput';
+
 
 const PanchakaMuhurth = () => {
     
@@ -24,6 +26,14 @@ const PanchakaMuhurth = () => {
     // const saveToLocalStorage = (data) => {
     //     localStorage.setItem("muhurats", JSON.stringify(data));
     // };
+    const handleCityChange = (newCity) => {
+        setCity(newCity);
+      };
+    
+      const handleDateChange = (newDate) => {
+        setDate(newDate);
+       
+      };
 
     const createDummyTable = useCallback(() => {
         const dummyTable = filteredData.map((row) => {
@@ -191,17 +201,7 @@ const PanchakaMuhurth = () => {
         }
     }, [filteredData, createDummyTable]); // Now including createDummyTable in the dependency array
 
-     // Screenshot function
-    const takeScreenshot = async () => {
-        const element = document.getElementById('muhurats-table');
-        const canvas = await html2canvas(element);
-        const img = canvas.toDataURL('image/png');
 
-        const link = document.createElement('a');
-        link.href = img;
-        link.download = `${city} Panchangam.png`;
-        link.click();
-    };
 
     return (
         <div className="PanchakaMuhurthContent">
@@ -225,6 +225,13 @@ const PanchakaMuhurth = () => {
                     onChange={(e) => setDate(e.target.value)}
                 />
                 <br />
+
+                {/* <CityAndDateInput
+                        onCityChange={handleCityChange}
+                        onDateChange={handleDateChange}
+                        initialCity={city}
+                        initialDate={date}
+                    /> */}
                 {/* <button onClick={getMuhuratData}>Get Muhurat</button> */}
                 <button onClick={checkAndFetchPanchangam}>Get Muhurat</button>
                 <button onClick={toggleShowAllRows}>
@@ -246,11 +253,7 @@ const PanchakaMuhurth = () => {
                     {renderTableRows(filteredData)}
                 </tbody>
             </table>
-            <div className="download-button">
-            <button className="share-button" onClick={takeScreenshot}>
-                <i className="far fa-share-square"></i>
-            </button>
-          </div>
+            <TableScreenshot tableId="muhurats-table" city={city} />
         </div>
     );
 };
