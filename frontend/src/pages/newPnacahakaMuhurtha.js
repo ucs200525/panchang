@@ -8,23 +8,32 @@ import CityAndDateInput from '../components/CityAndDateInput';
 const PanchakaMuhurth = () => {
     
     const [city, setCity] = useState('');
-    const [date, setDate] = useState('null');
+    const [date, setDate] = useState(() => {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const year = today.getFullYear();
+        return `${day}/${month}/${year}`; // Format: dd/mm/yyyy
+    });
+
     const { localCity, localDate, setCityAndDate  } = useAuth();
     const [allMuhuratData, setAllMuhuratData] = useState([]);
-   const [filteredData, setFilteredData] = useState(() => {
-  const storedData = sessionStorage.getItem('filteredData');
-  return storedData ? JSON.parse(storedData) : [];
-});
-
+    const [filteredData, setFilteredData] = useState([]);
     const [showAll, setShowAll] = useState(true); // State to toggle between all rows and filtered rows
     const [loading, setLoading] = useState(false); // Add loading state
     const [error, setError] = useState(null);
     const [fetchCity, setfetchCity] = useState(false);
-
-    useEffect(() => {
-        sessionStorage.setItem('filteredData', JSON.stringify(filteredData));
-        
-      }, [filteredData]);
+    // const saveToLocalStorage = (data) => {
+    //     localStorage.setItem("muhurats", JSON.stringify(data));
+    // };
+    const handleCityChange = (newCity) => {
+        setCity(newCity);
+      };
+    
+      const handleDateChange = (newDate) => {
+        setDate(newDate);
+       
+      };
 
     const createDummyTable = useCallback(() => {
         const dummyTable = filteredData.map((row) => {
@@ -192,17 +201,11 @@ const PanchakaMuhurth = () => {
         }
     }, [filteredData, createDummyTable]); // Now including createDummyTable in the dependency array
 
-    const handleDateChange = (e) => {
-        const [year, month, day] = e.target.value.split("-");
-        const formattedDate = `${day}/${month}/${year}`;
-        console.log("formattedDate: ",formattedDate);
-        setDate(formattedDate);
-      };
+
 
     return (
         <div className="PanchakaMuhurthContent">
             <h1>Panchaka Muhurat</h1>
-            
             <div className="cityAndDate">
                 <label htmlFor="city">City:</label>
                 <input
@@ -215,14 +218,13 @@ const PanchakaMuhurth = () => {
                 <br />
                 <label htmlFor="date">Date (DD/MM/YYYY):</label>
                 <input
-                    type="date"
+                    type="text"
                     id="date"
                     placeholder="Enter date"
-                    value={date.split("/").reverse().join("-")} // Convert from DD/MM/YYYY to YYYY-MM-DD for the input
-                    onChange={handleDateChange}
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
                 />
                 <br />
-
 
                 {/* <CityAndDateInput
                         onCityChange={handleCityChange}
@@ -240,15 +242,6 @@ const PanchakaMuhurth = () => {
             {loading && <LoadingSpinner />} {/* Show the spinner when loading */}
 
             <h2>Result</h2>
-            <div className="info-inline">
-          <div className="info-inline-item">
-            <strong>City:</strong> {city}
-          </div>
-          <div className="info-inline-item">
-            <strong>Date:</strong> {date}
-          </div>
-
-        </div>
             <table id="muhurats-table" border="1" cellspacing="0" cellpadding="5">
                 <thead>
                     <tr>

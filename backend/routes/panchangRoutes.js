@@ -116,17 +116,17 @@ async function getSunTimesForCity(city, date) {
     logger.error('get sun times3: ' + coords);
     if (coords) {
         const sunTimes = await fetchSunTimes(coords.lat, coords.lng, date, coords.timeZone);
-        return {sunTimes,coords};
+        return { sunTimes, coords };
     }
     return null;
 }
-
 // Function to get the weekday name from a date
 function getWeekday(dateString) {
-    const date = new Date(dateString);
+    logger.warn("dateString     "+dateString);
+    const [day, month, year] = dateString.split('/');
+    const date = new Date(`${year}-${month}-${day}`);
     const options = { weekday: 'long' };
-    const week= date.toLocaleDateString('en-US', options);
-    return week;
+    return date.toLocaleDateString('en-US', options);
 }
 
 function getCurrentDateInTimeZone(timeZone) {
@@ -164,25 +164,697 @@ async function getGeoNameId(city) {
 }
 
 
+
+
+
+
+
+
+
+////////////////////////////////////////////////BHARGAV--PANCHAGAM///////////////////////////////////////////
+// Function to convert time to seconds (assuming you have timeToSeconds and secondsToTime functions defined)
+const timeToSeconds = (time) => {
+  const [hrs, mins, secs] = time.split(':').map(Number);
+  return hrs * 3600 + mins * 60 + (secs || 0);
+};
+
+const secondsToTime = (seconds,currentDate,is12HourFormat) => {    
+  const baseDate = new Date(currentDate); // Ensure currentDate is a valid Date object
+
+  // If seconds exceed a day, calculate the date and time
+  const daysPassed = Math.floor(seconds / 86400); // Calculate how many full days have passed
+  seconds = seconds % 86400; // Ensure seconds are within a day
+  seconds = Math.round(seconds * 100) / 100; // Round seconds to 2 decimal places
+
+  let hrs = Math.floor(seconds / 3600); // Get hours
+  const mins = Math.floor((seconds % 3600) / 60); // Get minutes
+  const secs = Math.round(seconds % 60); // Get seconds, rounded to the nearest second
+
+  let timeString;
+   
+  // Convert to 12-hour format if needed
+  if (is12HourFormat) {
+    const period = hrs >= 12 ? 'PM' : 'AM'; // Determine AM/PM
+    hrs = hrs % 12 || 12; // Convert to 12-hour format, 0 becomes 12
+    timeString = `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')} ${period}`;
+  } else {
+    timeString = `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+ // 24-hour format
+  }
+
+  // If more than 1 day has passed, append the date, else just return the time
+  if (daysPassed > 0) {
+    baseDate.setDate(baseDate.getDate() + 1); // Add 1 day to currentDate
+    const formattedDate = baseDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); // Format the date like "Nov 29"
+    timeString = ` ${formattedDate} , ${timeString}`; // Append the formatted date to the time string
+  }
+
+  return timeString;
+};
+
+
+// // Helper function to find the closest day (you need to define your logic here)
+// const findClosestDay = (weekday) => {
+//   // Assuming weekday is passed as a string like 'Monday', 'Tuesday', etc.
+//   return weekday; // Modify this based on your logic for finding the closest day
+// };
+// router.post('/update-table', (req, res) => {
+//     const { sunriseToday, sunsetToday, sunriseTmrw, weekday, is12HourFormat, currentDate, showNonBlue } = req.body;
+//     const totalSec = timeToSeconds('24:00:00');
+    
+//     const sunriseTodaySec = timeToSeconds(sunriseToday);
+//     const sunsetTodaySec = timeToSeconds(sunsetToday);
+//     const sunriseTmrwSec = timeToSeconds(sunriseTmrw);
+
+//     const interval1 = (sunsetTodaySec - sunriseTodaySec) / 30;
+//     const interval2 = ((totalSec + sunriseTmrwSec) - sunsetTodaySec) / 30;
+//     const newTableData = [];
+//     let sunrise = sunriseTodaySec;
+//     let sunset = sunsetTodaySec;
+
+//     const weekdayRows = {
+//         "Monday": [0, 5, 12, 13, 21, 26, 29],
+//         "Tuesday": [2, 3, 7, 8, 9, 11, 12, 13, 14, 15, 18, 20, 21, 22, 24],
+//         "Wednesday": [0, 1, 4, 5, 6, 7, 9, 19, 27, 29],
+//         "Thursday": [2, 5, 8, 11, 13, 14, 15, 16, 18, 19, 20, 23, 24, 27, 28],
+//         "Friday": [1, 4, 6, 8, 14, 16, 18, 19, 22, 23, 24, 25, 26, 28],
+//         "Saturday": [0, 8, 9, 11, 12, 17, 22, 23, 25],
+//         "Sunday": [2, 3, 4, 5, 10, 14, 16, 19, 21, 23, 24, 25, 28]
+//     };
+
+//     const closestDay = weekday;
+
+//        const weekdayValues = {
+//         "Sunday": [
+//             "ప్రయాణకార్యసిద్ధి", "విద్యాజయం", "ఉద్యోగ కష్టం", "శత్రువృద్ధి", "చోరభయం", "దుఃఖము", "అభీష్టసిద్ధి", "సౌఖ్యం-లాభం", 
+//             "వివాహాదిశుభాని", "మిత్రవృద్ధి", "మృత్యుభయం", "ఆరోగ్యం", "శుభకార్యజయం", "ప్రయత్నఫలం", "విషభయం", "ఉద్యోగం", 
+//             "జ్వరప్రాప్తి", "రాజసన్మానం", "ప్రయాణలాభము", "వివాదము", "మిత్రత్వము", "జ్వరభయము", "ధనలాభము", "బంధనం", 
+//             "స్థానభ్రంశము", "విద్యాభంగము", "స్త్రీ భోగం", "ప్రయాణ జయం", "ప్రయాణ నాశము", "భూలాభము"
+//         ],
+//         "Monday": [
+//             "కార్యహాని", "రాజపూజ్యత", "వాహన ప్రాప్తి", "స్త్రీ సౌఖ్యము", "భూలాభము", "స్థానభ్రంశము", "గుప్తధనలాభము", "వ్యవహారజయం", 
+//             "ఉద్యోగము", "ప్రియభోజనం", "స్త్రీ లాభము", "రాజదర్శనం", "కార్యభంగం", "రోగపీడ", "కార్యసిద్ధి", "శత్రునాశము", 
+//             "గో లాభము", "కార్యజయము", "ఆరోగ్యం", "మిత్రత్వము", "సౌఖ్యము", "కార్యభంగము", "వివాహజయం", "కార్యప్రాప్తి", 
+//             "ధనలాభము", "విద్యాలాభము", "స్థిరకార్యనాశము", "ఉద్యోగజయం", "యాత్రా ప్రాప్తి", "రాజభయం"
+//         ],
+//         "Tuesday": [
+//             "ధనలాభం", "ప్రయాణజయం", "దుఃఖము", "భూతభయము", "వాహనప్రాప్తి", "పరోపకారము", "వస్త్ర ప్రాప్తి", "ప్రయాణ నష్టం", 
+//             "వివాదహాని", "శత్రుబాధ", "స్త్రీ లాభము", "కార్యనాశనము", "కష్టం", "జంతు భయం", "అగ్నిబాధ", "రోగపీడ", 
+//             "పుత్రలాభము", "కార్యజయము", "చిక్కులు", "రాజ సన్మానం", "నమ్ము అగుట", "కార్యనష్టము", "అపజయం", "శత్రుజయం", 
+//             "ఉద్యోగహాని", "జయప్రదము", "కార్యసిద్ధి", "కార్యలాభం", "సుఖసౌఖ్యం", "మిత్రత్వము"
+//         ],
+//         "Wednesday": [
+//             "దుర్వార్తలు", "మనఃక్షోభం", "ధనలాభం", "యత్నకార్యసిద్ధి", "కార్యభంగము", "మహాభయము", "మనశ్చాంచల్యం", "ఉపద్రవములు", 
+//             "జయప్రదము", "ప్రయాణభయము", "రాజసన్మానము", "ధనధాన్యవృద్ధి", "ఉద్యోగజయం", "లాభము", "ప్రయత్నజయం", "వస్త్ర లాభం", 
+//             "సంతోషం", "క్షేమం", "స్వల్పలాభం", "కలహము", "ఇష్టసిద్ధి", "పుత్రలాభము", "ఉద్యోగజయం", "ప్రయాణజయం", 
+//             "వ్యవహారజయం", "వివాహశుభం", "కార్యజయం", "మనఃక్లేశము", "బంధుసమాగము", "వాహనప్రమాదం"
+//         ],
+//         "Thursday": [
+//             "ధనలాభం", "మనోభీష్టసిద్ధి", "అనారోగ్యం", "వాహన ప్రాప్తి", "వివాహశుభం", "సుఖనాశనం", "ఉద్యోగజయం", "స్వామిదర్శనం", 
+//             "ప్రయాణభంగం", "కార్యసిద్ధి", "వ్యాపారజయం", "శత్రునాశం", "వివాహజయం", "రోగనాశం", "కలహప్రదం", "ఉద్యోగ నష్టం", "కోపతీవ్రత",
+//             "కార్యజయం", "స్థాననాశం", "చోరభయం", "వివాహకలహం", "వివాదజయం", "యాత్రాశుభం", "ధైర్యహాని", "కార్యభంగం", 
+//             "ప్రయాణక్షేమం", "వివాహ శుభం", "కలహప్రదం", "జ్వరశస్త్రబాధ", "విద్యాభివృద్ధి"
+//         ],
+//         "Friday": [
+//             "కార్యసిద్ధి", "కార్యనాశము", "ధనలాభము", "రాజానుగ్రహం", "అపజయం", "కార్యజయం", "దుఃఖం-భయం","ధైర్యం", "కష్టం-నష్టం", 
+//             "సౌఖ్యము", "అనుకూలము", "వస్తువాహనప్రాప్తి", "క్షేమం-లాభం", "కార్యవిజయం", "శస్త్ర భయం", "శత్రునాశం", "అతిభయము", 
+//             "విద్యాసిద్ధి","రోగ బాధలు", "దుఃఖము", "వాహనప్రాప్తి", "స్త్రీ లాభము", "స్పోటకపీడ", "విషజంతుభయం", "ప్రయాణకష్టం", "శత్రుభయం", 
+//             "కార్యనష్టం", "ప్రయాణసౌఖ్యం", "దుఃఖము", "రాజసన్మానం"  ],
+//         "Saturday": [
+//             "కార్యహాని", "సౌఖ్యము", "వివాహసిద్ధి", "మిత్రత్వం", "ప్రయాణజయం", "వాహనలాభం", "కార్యజయం", "రాజసన్మానం", 
+//             "కార్యనష్టం", "ప్రయాణహాని", "వస్త్ర-స్త్రీలాభాలు", "మనశ్చాంచల్యం", "మిత్రనష్టం", "మిత్రప్రాప్తి", "స్త్రీ లాభం", 
+//             "ధనలాభము", "ప్రయాణజయం", "ప్రయాణ నష్టం", "క్షేమం", "వాహనయోగం", "జ్ఞానవృద్ధి", "వినోదము", "కలహము", 
+//             "ఉద్యోగనష్టం", "ప్రయత్నజయం", "మనస్తాపం", "శత్రునాశం", "విరోధనాశనం", "ప్రయాణ లాభం","ప్రియవార్తలు"
+//         ]
+//     };
+
+//     for (let i = 0; i < 30; i++) {
+//         const start1 = secondsToTime(sunrise, currentDate, is12HourFormat);
+//         sunrise += interval1;
+//         const end1 = secondsToTime(sunrise, currentDate, is12HourFormat);
+
+//         const start2 = secondsToTime(sunset, currentDate, is12HourFormat);
+//         sunset += interval2;
+//         const end2 = secondsToTime(sunset, currentDate, is12HourFormat);
+
+//         const isColored = weekdayRows[closestDay]?.includes(i);
+//         const isWednesdayColored = closestDay === 'Wednesday' && i === 28;
+
+//         newTableData.push({
+//             start1,
+//             end1,
+//             start2,
+//             end2,
+//             sNo: i + 1,
+//             value1: i === 0 ? secondsToTime(interval1, currentDate, is12HourFormat) 
+//                 : i === 1 ? secondsToTime(interval2, currentDate, is12HourFormat) 
+//                 : i === 2 ? secondsToTime(totalSec, currentDate, is12HourFormat) 
+//                 : i === 3 ? 'sunriseToday' 
+//                 : i === 4 ? 'sunsetToday' 
+//                 : i === 5 ? 'sunriseTmrw' : '',
+//             value2: i === 3 ? sunriseToday 
+//                 : i === 4 ? sunsetToday 
+//                 : i === 5 ? sunriseTmrw : '',
+//             isColored,
+//             isWednesdayColored,
+//             weekday: weekdayValues[closestDay][i]
+//         });
+//     }
+
+//     newTableData.push({
+//         start1: sunsetToday,
+//         end1: '',
+//         weekday: '',
+//         start2: sunriseTmrw,
+//         end2: '',
+//         sNo: '',
+//         value1: '',
+//         value2: '',
+//         isColored: false
+//     });
+
+// if (showNonBlue) {
+//     const filteredTableData = newTableData.filter(row => {
+//         return !row.isColored && !row.isWednesdayColored;
+//     });
+//     res.json({ newTableData: filteredTableData });
+// } else {
+//     res.json({ newTableData });
+// }
+
+// });
+
+// Levenshtein distance function
+function levenshtein(a, b) {
+    let tmp;
+    let i, j;
+    const alen = a.length;
+    const blen = b.length;
+    const arr = [];
+
+    if (alen === 0) { return blen; }
+    if (blen === 0) { return alen; }
+
+    for (i = 0; i <= blen; i++) { arr[i] = [i]; }
+    for (j = 0; j <= alen; j++) { arr[0][j] = j; }
+
+    for (i = 1; i <= blen; i++) {
+        for (j = 1; j <= alen; j++) {
+            tmp = a[j - 1] === b[i - 1] ? 0 : 1;
+            arr[i][j] = Math.min(arr[i - 1][j] + 1, arr[i][j - 1] + 1, arr[i - 1][j - 1] + tmp);
+        }
+    }
+
+    return arr[blen][alen];
+}
+
+// Possible correct day names
+const dayNames = {
+    "Monday": ["monday", "mon", "mondy", "moday"],
+    "Tuesday": ["tuesday", "tues", "tuesd", "tueday"],
+    "Wednesday": ["wednesday", "wed", "wednes", "wensday"],
+    "Thursday": ["thursday", "thur", "thurs", "thurday"],
+    "Friday": ["friday", "fri", "frid", "fryday"],
+    "Saturday": ["saturday", "sat", "satur", "saterday"],
+    "Sunday": ["sunday", "sun", "sund", "sundey"]
+};
+
+// Find the closest match for a given input
+const findClosestDay = (input ) => {
+    logger.warn("input     "+input);
+    let minDistance = Infinity;
+    let closestDay = "";
+    
+    const normalizedInput = input.toLowerCase();
+    
+    for (const [day, variants] of Object.entries(dayNames)) {
+        for (const variant of variants) {
+            const distance = levenshtein(normalizedInput, variant.toLowerCase());
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestDay = day;
+            }
+        }
+    }
+
+    return closestDay;
+}
+
+const generateTableData = (sunriseToday, sunsetToday, sunriseTmrw, weekday, is12HourFormat, currentDate, showNonBlue) => {
+    const totalSec = timeToSeconds('24:00:00');
+    
+    const sunriseTodaySec = timeToSeconds(sunriseToday);
+    const sunsetTodaySec = timeToSeconds(sunsetToday);
+    const sunriseTmrwSec = timeToSeconds(sunriseTmrw);
+
+    const interval1 = (sunsetTodaySec - sunriseTodaySec) / 30;
+    const interval2 = ((totalSec + sunriseTmrwSec) - sunsetTodaySec) / 30;
+    const newTableData = [];
+    let sunrise = sunriseTodaySec;
+    let sunset = sunsetTodaySec;
+
+    const weekdayRows = {
+        "Monday": [0, 5, 12, 13, 21, 26, 29],
+        "Tuesday": [2, 3, 7, 8, 9, 11, 12, 13, 14, 15, 18, 20, 21, 22, 24],
+        "Wednesday": [0, 1, 4, 5, 6, 7, 9, 19, 27, 29],
+        "Thursday": [2, 5, 8, 11, 13, 14, 15, 16, 18, 19, 20, 23, 24, 27, 28],
+        "Friday": [1, 4, 6, 8, 14, 16, 18, 19, 22, 23, 24, 25, 26, 28],
+        "Saturday": [0, 8, 9, 11, 12, 17, 22, 23, 25],
+        "Sunday": [2, 3, 4, 5, 10, 14, 16, 19, 21, 23, 24, 25, 28]
+    };
+    logger.warn("weekday     "+weekday);
+    const closestDay = findClosestDay(weekday) ;
+    logger.warn("closestDay     "+closestDay);
+    const weekdayValues = {
+        "Sunday": [
+            "ప్రయాణకార్యసిద్ధి", "విద్యాజయం", "ఉద్యోగ కష్టం", "శత్రువృద్ధి", "చోరభయం", "దుఃఖము", "అభీష్టసిద్ధి", "సౌఖ్యం-లాభం", 
+            "వివాహాదిశుభాని", "మిత్రవృద్ధి", "మృత్యుభయం", "ఆరోగ్యం", "శుభకార్యజయం", "ప్రయత్నఫలం", "విషభయం", "ఉద్యోగం", 
+            "జ్వరప్రాప్తి", "రాజసన్మానం", "ప్రయాణలాభము", "వివాదము", "మిత్రత్వము", "జ్వరభయము", "ధనలాభము", "బంధనం", 
+            "స్థానభ్రంశము", "విద్యాభంగము", "స్త్రీ భోగం", "ప్రయాణ జయం", "ప్రయాణ నాశము", "భూలాభము"
+        ],
+        "Monday": [
+            "కార్యహాని", "రాజపూజ్యత", "వాహన ప్రాప్తి", "స్త్రీ సౌఖ్యము", "భూలాభము", "స్థానభ్రంశము", "గుప్తధనలాభము", "వ్యవహారజయం", 
+            "ఉద్యోగము", "ప్రియభోజనం", "స్త్రీ లాభము", "రాజదర్శనం", "కార్యభంగం", "రోగపీడ", "కార్యసిద్ధి", "శత్రునాశము", 
+            "గో లాభము", "కార్యజయము", "ఆరోగ్యం", "మిత్రత్వము", "సౌఖ్యము", "కార్యభంగము", "వివాహజయం", "కార్యప్రాప్తి", 
+            "ధనలాభము", "విద్యాలాభము", "స్థిరకార్యనాశము", "ఉద్యోగజయం", "యాత్రా ప్రాప్తి", "రాజభయం"
+        ],
+        "Tuesday": [
+            "ధనలాభం", "ప్రయాణజయం", "దుఃఖము", "భూతభయము", "వాహనప్రాప్తి", "పరోపకారము", "వస్త్ర ప్రాప్తి", "ప్రయాణ నష్టం", 
+            "వివాదహాని", "శత్రుబాధ", "స్త్రీ లాభము", "కార్యనాశనము", "కష్టం", "జంతు భయం", "అగ్నిబాధ", "రోగపీడ", 
+            "పుత్రలాభము", "కార్యజయము", "చిక్కులు", "రాజ సన్మానం", "నమ్ము అగుట", "కార్యనష్టము", "అపజయం", "శత్రుజయం", 
+            "ఉద్యోగహాని", "జయప్రదము", "కార్యసిద్ధి", "కార్యలాభం", "సుఖసౌఖ్యం", "మిత్రత్వము"
+        ],
+        "Wednesday": [
+            "దుర్వార్తలు", "మనఃక్షోభం", "ధనలాభం", "యత్నకార్యసిద్ధి", "కార్యభంగము", "మహాభయము", "మనశ్చాంచల్యం", "ఉపద్రవములు", 
+            "జయప్రదము", "ప్రయాణభయము", "రాజసన్మానము", "ధనధాన్యవృద్ధి", "ఉద్యోగజయం", "లాభము", "ప్రయత్నజయం", "వస్త్ర లాభం", 
+            "సంతోషం", "క్షేమం", "స్వల్పలాభం", "కలహము", "ఇష్టసిద్ధి", "పుత్రలాభము", "ఉద్యోగజయం", "ప్రయాణజయం", 
+            "వ్యవహారజయం", "వివాహశుభం", "కార్యజయం", "మనఃక్లేశము", "బంధుసమాగము", "వాహనప్రమాదం"
+        ],
+        "Thursday": [
+            "ధనలాభం", "మనోభీష్టసిద్ధి", "అనారోగ్యం", "వాహన ప్రాప్తి", "వివాహశుభం", "సుఖనాశనం", "ఉద్యోగజయం", "స్వామిదర్శనం", 
+            "ప్రయాణభంగం", "కార్యసిద్ధి", "వ్యాపారజయం", "శత్రునాశం", "వివాహజయం", "రోగనాశం", "కలహప్రదం", "ఉద్యోగ నష్టం", "కోపతీవ్రత",
+            "కార్యజయం", "స్థాననాశం", "చోరభయం", "వివాహకలహం", "వివాదజయం", "యాత్రాశుభం", "ధైర్యహాని", "కార్యభంగం", 
+            "ప్రయాణక్షేమం", "వివాహ శుభం", "కలహప్రదం", "జ్వరశస్త్రబాధ", "విద్యాభివృద్ధి"
+        ],
+        "Friday": [
+            "కార్యసిద్ధి", "కార్యనాశము", "ధనలాభము", "రాజానుగ్రహం", "అపజయం", "కార్యజయం", "దుఃఖం-భయం","ధైర్యం", "కష్టం-నష్టం", 
+            "సౌఖ్యము", "అనుకూలము", "వస్తువాహనప్రాప్తి", "క్షేమం-లాభం", "కార్యవిజయం", "శస్త్ర భయం", "శత్రునాశం", "అతిభయము", 
+            "విద్యాసిద్ధి","రోగ బాధలు", "దుఃఖము", "వాహనప్రాప్తి", "స్త్రీ లాభము", "స్పోటకపీడ", "విషజంతుభయం", "ప్రయాణకష్టం", "శత్రుభయం", 
+            "కార్యనష్టం", "ప్రయాణసౌఖ్యం", "దుఃఖము", "రాజసన్మానం"
+        ],
+        "Saturday": [
+            "కార్యహాని", "సౌఖ్యము", "వివాహసిద్ధి", "మిత్రత్వం", "ప్రయాణజయం", "వాహనలాభం", "కార్యజయం", "రాజసన్మానం", 
+            "కార్యనష్టం", "ప్రయాణహాని", "వస్త్ర-స్త్రీలాభాలు", "మనశ్చాంచల్యం", "మిత్రనష్టం", "మిత్రప్రాప్తి", "స్త్రీ లాభం", 
+            "ధనలాభము", "ప్రయాణజయం", "ప్రయాణ నష్టం", "క్షేమం", "వాహనయోగం", "జ్ఞానవృద్ధి", "వినోదము", "కలహము", 
+            "ఉద్యోగనష్టం", "ప్రయత్నజయం", "మనస్తాపం", "శత్రునాశం", "విరోధనాశనం", "ప్రయాణ లాభం", "ప్రియవార్తలు"
+        ]
+    };
+
+    for (let i = 0; i < 30; i++) {
+        const start1 = secondsToTime(sunrise, currentDate, is12HourFormat);
+        sunrise += interval1;
+        const end1 = secondsToTime(sunrise, currentDate, is12HourFormat);
+
+        const start2 = secondsToTime(sunset, currentDate, is12HourFormat);
+        sunset += interval2;
+        const end2 = secondsToTime(sunset, currentDate, is12HourFormat);
+
+        const isColored = weekdayRows[closestDay]?.includes(i);
+        const isWednesdayColored = closestDay === 'Wednesday' && i === 28;
+
+        newTableData.push({
+            start1,
+            end1,
+            start2,
+            end2,
+            sNo: i + 1,
+            value1: i === 0 ? secondsToTime(interval1, currentDate, is12HourFormat) 
+                : i === 1 ? secondsToTime(interval2, currentDate, is12HourFormat) 
+                : i === 2 ? secondsToTime(totalSec, currentDate, is12HourFormat) 
+                : i === 3 ? 'sunriseToday' 
+                : i === 4 ? 'sunsetToday' 
+                : i === 5 ? 'sunriseTmrw' : '',
+            value2: i === 3 ? sunriseToday 
+                : i === 4 ? sunsetToday 
+                : i === 5 ? sunriseTmrw : '',
+            isColored,
+            isWednesdayColored,
+            weekday: weekdayValues[closestDay][i]
+        });
+    }
+
+    newTableData.push({
+        start1: sunsetToday,
+        end1: '',
+        weekday: '',
+        start2: sunriseTmrw,
+        end2: '',
+        sNo: '',
+        value1: '',
+        value2: '',
+        isColored: false
+    });
+
+    let filteredTableData = newTableData;
+    if (showNonBlue) {
+        filteredTableData = newTableData.filter(row => !row.isColored && !row.isWednesdayColored);
+    }
+
+    return filteredTableData;
+};
+
+router.post('/update-table', (req, res) => {
+    const { sunriseToday, sunsetToday, sunriseTmrw, weekday, is12HourFormat, currentDate, showNonBlue } = req.body;
+    const filteredTableData = generateTableData(sunriseToday, sunsetToday, sunriseTmrw, weekday, is12HourFormat, currentDate, showNonBlue);
+    res.json({ newTableData: filteredTableData });
+});
+
+// const createBharagvTable = async (city, date, showNonBlue, is12HourFormat) => { 
+//     const sun = await getSunTimesForCity(city, date);
+//     if (!sun) return [];  // Ensure sunTimes is available
+//     const weekday = getWeekday(date);
+//     const tableData = generateTableData(
+//         sun.sunTimes.sunriseToday, 
+//         sun.sunTimes.sunsetToday, 
+//         sun.sunTimes.sunriseTmrw, 
+//         weekday, 
+//         is12HourFormat, 
+//         date, 
+//         showNonBlue
+//     );
+
+//     return tableData;
+// };
+const createBharagvTable = async (city, date, showNonBlue, is12HourFormat) => { 
+    const sun = await getSunTimesForCity(city, date);
+    if (!sun) return [];  // Ensure sunTimes is available
+  
+    const weekday = getWeekday(date);
+    console.log("weekday const ",weekday);
+    // Generate tableData with the sun times and other parameters
+    const tableData = generateTableData(
+      sun.sunTimes.sunriseToday, 
+      sun.sunTimes.sunsetToday, 
+      sun.sunTimes.sunriseTmrw, 
+      weekday, 
+      is12HourFormat, 
+      date, 
+      showNonBlue
+    );
+  
+    // Format the table data by processing the first and second time intervals
+    const dummyData = [];
+  
+    // Process the first 30 rows for timeInterval1
+    for (let i = 0; i < 30; i++) {
+      const row = tableData[i]; // Access the original row
+      if (row) {
+        const start1 = row.start1 ? row.start1.split(",")[0].trim() : ""; // Trim date from start
+        dummyData.push({
+          sNo: i + 1,
+          start1: row.start1 || "",
+          end1: row.end1 || "",
+          start2: row.start2 || "", // Set as empty if unavailable
+          end2: row.end2 || "",
+          timeInterval1: row.start1 && row.end1 ? `${row.start1} to ${row.end1}` : "",
+          timeInterval2: "", // Leave blank for these rows
+          weekday: row.weekday || "-",
+          value1: row.value1 || "",
+          value2: row.value2 || "",
+          isColored: row.isColored || false,
+          isWednesdayColored: row.isWednesdayColored || false,
+        });
+      }
+    }
+  
+    // Process the next 30 rows for timeInterval2
+    for (let i = 0; i < 30; i++) {
+      const row = tableData[i]; // Access the original row
+      if (row) {
+        const start2 = row.start2 ? row.start2.split(",")[0].trim() : ""; // Trim date from start2
+        dummyData.push({
+          sNo: i + 1,
+          start1: "", // Leave blank for these rows
+          end1: "",
+          start2: row.start2 || "",
+          end2: row.end2 || "",
+          timeInterval1: start2 && row.end2 ? `${row.start2} to ${row.end2}` : "",
+          timeInterval2: "", // Leave blank for these rows
+          weekday: row.weekday || "-",
+          value1: row.value1 || "",
+          value2: row.value2 || "",
+          isColored: row.isColored || false,
+          isWednesdayColored: row.isWednesdayColored || false,
+        });
+      }
+    }
+  
+    // Set the formatted data to BharagavaPanchagamData
+    const BharagavaPanchagamData = dummyData;
+   
+    return BharagavaPanchagamData;  // Return the formatted data if needed
+  };
+  
+
+// API endpoint to get the Bharagv table based on city, date, showNonBlue, and is12HourFormat
+router.get('/getBharagvTable', async (req, res) => {
+    const { city, date, showNonBlue, is12HourFormat } = req.query;
+    if (!city || !date) {
+        return res.status(400).send('City and date are required');
+    }
+    if (showNonBlue === undefined || is12HourFormat === undefined) {
+        return res.status(400).send('showNonBlue and is12HourFormat are required');
+    }
+
+    try {
+        const table = await createBharagvTable(city, date, showNonBlue === 'true', is12HourFormat === 'true');
+        res.json(table); // Send the table data as a JSON response
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error generating table');
+    }
+});
+////////////////////////////////////////////////END----BHARGAV--PANCHAGAM//////////////////////////////////
+
+// Function to create the dummy table with formatted time intervals
+const createDrikTable = async (city, date) => {
+    // Fetch the muhurat data using the city and date
+    const filteredData = await fetchmuhurat(city, date); // Assuming fetchmuhurat is an async function
+
+    // Create the drikTable by mapping over filteredData
+    const drikTable = filteredData.map((row) => {
+        const [startTime, endTime] = row.time.split(" to ");
+
+        let endTimeWithoutDate, endDatePart;
+
+        if (endTime.includes(", ")) {
+            [endTimeWithoutDate, endDatePart] = endTime.split(", ");
+        } else {
+            endTimeWithoutDate = endTime; // If no comma, the entire string is the time
+            endDatePart = null;          // No date part available
+        }
+
+        // Use the provided date
+        const currentDate = new Date(date);
+        let adjustedStartTime = startTime.includes("PM")
+            ? `${startTime}`
+            : startTime.includes("AM") && endTime.includes(",")
+                ? `${endDatePart} , ${startTime}`
+                : startTime;
+
+        let adjustedEndTime = endTime.includes("AM") && endTime.includes(",")
+            ? `${endDatePart} , ${endTimeWithoutDate}`
+            : endTime.includes("PM")
+                ? `${endTimeWithoutDate}`
+                : endTime;
+
+        const timeIntervalFormatted = `${adjustedStartTime} to ${adjustedEndTime}`;
+
+        return {
+            category: row.category,
+            muhurat: row.muhurat,
+            time: timeIntervalFormatted,
+        };
+    });
+
+    // Return the formatted table
+    return drikTable;
+};
+router.get('/getDrikTable', async (req, res) => {
+    const { city, date, goodTimingsOnly } = req.query;
+
+    // If goodTimingsOnly is not provided, set it to true by default
+    const isGoodTimingsOnly = goodTimingsOnly !== 'false'; // Defaults to true unless 'false' is explicitly passed
+
+    if (!city || !date) {
+        return res.status(400).send('City and date are required');
+    }
+
+    try {
+        // Fetch the complete table
+        const table = await createDrikTable(city, date);
+        
+        // If goodTimingsOnly is true, filter the table to include only "Good" category
+        if (isGoodTimingsOnly) {
+            const filteredTable = table.filter(row => row.category === 'Good');
+            return res.json(filteredTable); // Send the filtered table
+        }
+        
+        // If goodTimingsOnly is false, return the full table
+        res.json(table); // Send the complete table as a JSON response
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error generating table');
+    }
+});
+
+
+
+////////////////////////////////////////////////COMBINE--PANCHAGAM//////////////////////////////////
+
+
+// Helper function to parse time strings (without seconds)
+const parseTime = (timeStr, baseDate, isNextDay = false) => {
+    if (!timeStr) return null;
+  
+    const [time, period] = timeStr.trim().split(" ");
+    const [hours, minutes] = time.split(":").map(Number);
+    const date = new Date(baseDate);
+  
+    date.setHours(
+      period === "PM" && hours !== 12 ? hours + 12 : period === "AM" && hours === 12 ? 0 : hours,
+      minutes || 0,
+      0
+    );
+  
+    if (isNextDay) date.setDate(date.getDate() + 1);
+  
+    return date;
+  };
+  
+  // Function to split intervals and handle incomplete intervals
+  const splitInterval = (interval, baseDate) => {
+    if (!interval || interval.trim() === "") return [null, null];
+  
+    const [start, end] = interval.split(" to ");
+    if (!start || !end) return [null, null];
+  
+    const isNextDayStart = start.includes(",");
+    const startTime = start.replace(/.*?,/, "").trim();
+  
+    const isNextDayEnd = end.includes(",");
+    const endTime = end.replace(/.*?,/, "").trim();
+  
+    return [
+      parseTime(startTime, baseDate, isNextDayStart),
+      parseTime(endTime, baseDate, isNextDayEnd),
+    ];
+  };
+  
+  // Function to validate time interval
+  const validateInterval = (start, end) => {
+    if (!start || !end) {
+    //   console.log("Invalid Interval:", start, end);
+      return false;
+    }
+    // console.log("Valid Interval:", start, end);
+    return true;
+  };
+  
+  // Function to process Muhurat and Panchangam data
+  const processMuhuratAndPanchangam = (muhuratData, panchangamData, baseDate) => {
+    const mergedData = [];
+    let i = 0;
+  
+    muhuratData.forEach((muhuratItem) => {
+      const [muhuratStart, muhuratEnd] = splitInterval(muhuratItem.time, baseDate);
+      if (muhuratStart && muhuratEnd && validateInterval(muhuratStart, muhuratEnd)) {
+        const weekdaysArray = [];
+  
+        panchangamData.forEach((panchangamItem) => {
+          const timeInterval = panchangamItem.timeInterval1;
+          const [start, end] = splitInterval(timeInterval, baseDate);
+          if (start && end && validateInterval(start, end)) {
+            if (start <= muhuratEnd && end >= muhuratStart) {
+              if (!weekdaysArray.find((item) => item.weekday === panchangamItem.weekday)) {
+                weekdaysArray.push({
+                  weekday: panchangamItem.weekday,
+                  time: `${start.toLocaleTimeString()} - ${end.toLocaleTimeString()}`,
+                });
+              }
+            }
+          }
+        });
+  
+        mergedData.push({
+          sno: i + 1,
+          type: "Muhurat",
+          description: `${muhuratItem.muhurat} - ${muhuratItem.category}`,
+          timeInterval: muhuratItem.time,
+          weekdays: weekdaysArray.length > 0 ? weekdaysArray : [{ weekday: "-", time: "-" }],
+        });
+        i++;
+      }
+    });
+  
+    return mergedData;
+  };
+  
+  // API endpoint to fetch combined data
+  router.post("/combine", (req, res) => {
+    const { muhuratData, panchangamData, city, date } = req.body;
+  
+    if (!muhuratData || !panchangamData || !city || !date) {
+      return res.status(400).json({ error: "Invalid input data" });
+    }
+  
+    const baseDate = new Date(date);
+    const finalData = processMuhuratAndPanchangam(muhuratData, panchangamData, baseDate);
+  
+    res.json(finalData);
+  });
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 router.get('/', (req, res) => {
     res.send('Hello from Express on Vercel!');
   });
-  
-// Route to fetch Muhurat data with dynamic city and date input
-router.post('/fetch_muhurat', async (req, res) => {
-    const { city, date } = req.body;  // Get city and date from the request body
-    
+ 
+// Function to fetch Muhurat data for a given city and date
+const fetchmuhurat = async (city, date) => {
     try {
         // Get the GeoName ID for the provided city
         const geoNameId = await getGeoNameId(city);
+        
         // Format the URL to include the date and GeoName ID
         const url = `https://www.drikpanchang.com/muhurat/panchaka-rahita-muhurat.html?geoname-id=${geoNameId}&date=${date}`;
+        
         // Fetch the HTML content from the website
         const response = await axios.get(url);  
+        
         // Load the HTML content using cheerio
         const $ = cheerio.load(response.data);
+        
         // Extract the required data from the table
         const muhuratData = [];
+        
+        // Loop through all the rows that contain the Muhurat information
         $('.dpMuhurtaRow').each((i, element) => {
             const muhurtaName = $(element).find('.dpMuhurtaName').text().trim();
             const muhurtaTime = $(element).find('.dpMuhurtaTime').text().trim();
@@ -195,11 +867,31 @@ router.post('/fetch_muhurat', async (req, res) => {
                 time: muhurtaTime
             });
         });
+
+        return muhuratData; // Return the muhurat data
+
+    } catch (error) {
+        console.error("Error fetching Muhurat data:", error);
+        throw new Error('Error fetching data');
+    }
+};
+
+
+
+
+
+// Route to fetch Muhurat data with dynamic city and date input
+router.post('/fetch_muhurat', async (req, res) => {
+    const { city, date } = req.body;  // Get city and date from the request body
+    
+    try {
+        // Call the fetchmuhurat function with city and date
+        const muhuratData = await fetchmuhurat(city, date);
         
         // Return the data as JSON response
         res.json(muhuratData);
     } catch (error) {
-        console.error("Error fetching Muhurat data:", error);
+        console.error("Error in route fetching Muhurat data:", error);
         res.status(500).send('Error fetching data');
     }
 });

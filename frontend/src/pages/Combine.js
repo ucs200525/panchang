@@ -1,239 +1,313 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from '../context/AuthContext';
-import html2canvas from 'html2canvas';
+import React, { useState, useEffect } from 'react';
 import TableScreenshot from '../components/TableScreenshot';
 
-const Combine = () => {
-    const [muhuratData, setMuhuratData] = useState([]);
-    const [panchangamData, setPanchangamData] = useState([]);
-    const [finalData, setFinalData] = useState([]);
-    const { localCity, localDate, setCityAndDate  } = useAuth();
-    const [city, setCity] = useState('');
-    const [isSearching, setIsSearching] = useState(false);
+const CombinePage = () => {
+  const [city, setCity] = useState('');
+  const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
+  ;
+  const [combinedData, setCombinedData] = useState(() => {
+    const storedData = sessionStorage.getItem('combinedData');
+    return storedData ? JSON.parse(storedData) : null;
+  });
+  
+  const [muhurthaData, setMuhurthaData] = useState(null);
+  const [fetchCity, setFetchCity] = useState(false); // Track whether city was auto-fetched
+  const [fetchData, setFetchData] = useState(false);
+  const [bharagvData, setBharagvData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [weekday, setWeekday] = useState(() => sessionStorage.getItem('weekday') || '');
+  const [showNonBlue, setShowNonBlue] = useState(true);  // default to true
+  const [is12HourFormat, setIs12HourFormat] = useState(true); // default to true
 
-    const [date, setDate] = useState(() => {
-        const today = new Date();
-        const day = String(today.getDate()).padStart(2, '0');
-        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-        const year = today.getFullYear();
-        return `${day}/${month}/${year}`; // Format: dd/mm/yyyy
-    });
+
+  useEffect(() => {
+    sessionStorage.setItem('city', city);
+    sessionStorage.setItem('date', date);
+    sessionStorage.setItem('combinedData', JSON.stringify(combinedData));
+    sessionStorage.setItem('weekday', weekday);
+  }, [city, date, combinedData, weekday]);
+
+
+  const autoGeolocation = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          try {
+            const cityResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/fetchCityName/${lat}/${lng}`);
+            if (!cityResponse.ok) {
+              throw new Error('Failed to fetch city name');
+            }
+            const cityData = await cityResponse.json();
+            const cityName = cityData.cityName;
+            console.log('cityData', cityData);
+            setCity(cityName);
+            setFetchCity(true);
+            setFetchData(true);
+          } catch (error) {
+            setError(error.message || 'Error fetching city name');
+          }
+        },
+        (error) => {
+          setError('Geolocation error: ' + error.message);
+        }
+      );
+    } else {
+      setError('Geolocation is not supported by this browser.');
+    }
+  };
+
+  const handleCityChange = (e) => {
+    setCity(e.target.value);
+    setFetchCity(false); // Reset fetchCity if user provides a manual input
+  };
+
+
+  const handleDateChange = (e) => {
+    setDate(e.target.value);
+  };
+
+  const handleShowNonBlueChange = (e) => {
+    setShowNonBlue(e.target.checked);
+  };
+
+  const handle12HourFormatChange = (e) => {
+    setIs12HourFormat(e.target.checked);
+  };
+
+  const convertToDDMMYYYY = (date) => {
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`;
+  };
+
+  const checkAndFetchPanchangam = async () => {
+    if (city && date) {
+      await fetchMuhuratData();
+      // setCityAndDate(cityName,currentDate);
+    } else {
+      await autoGeolocation();
+      // setCityAndDate(cityName,currentDate);
+    }
+  };
+
     
-    // Retrieve data from sessionStorage
     useEffect(() => {
-        const storedMuhuratData = sessionStorage.getItem("muhurats");
-        const storedPanchangamData = sessionStorage.getItem("panchangamTableData");
-
-        if (storedMuhuratData) {
-            setMuhuratData(JSON.parse(storedMuhuratData));
-            console.log("Stored Muhurat Data: ", JSON.parse(storedMuhuratData));
+        if (fetchData) {
+          fetchMuhuratData();
+          setFetchData(false); // Reset fetchData to prevent re-fetching immediately
+       
         }
-        if (storedPanchangamData) {
-            setPanchangamData(JSON.parse(storedPanchangamData));
-            console.log("Stored Panchangam Data: ", JSON.parse(storedPanchangamData));
-        }
-    }, []);
-// Helper function to parse time strings (without seconds)
-const parseTime = (timeStr, baseDate, isNextDay = false) => {
-    if (!timeStr) return null;
-
-    const [time, period] = timeStr.trim().split(" ");
-    const [hours, minutes] = time.split(":").map(Number);
-    const date = new Date(baseDate);
-
-    // Set hours and minutes
-    date.setHours(
-        period === "PM" && hours !== 12 ? hours + 12 : period === "AM" && hours === 12 ? 0 : hours,
-        minutes || 0,
-        0 // Ignore seconds
-    );
-
-    // Increment day if `isNextDay` is true
-    if (isNextDay) date.setDate(date.getDate() + 1);
-
-    return date;
-};
-
-// Function to split intervals and handle incomplete intervals
-const splitInterval = (interval, baseDate) => {
-    if (!interval || interval.trim() === "") return [null, null];
-
-    const [start, end] = interval.split(" to ");
-    if (!start || !end) return [null, null];
-
-    // Check if `start` or `end` specifies the next day
-    const isNextDayStart = start.includes(","); // Indicates start is on the next day
-    const startTime = start.replace(/.*?,/, "").trim(); // Remove date prefix if present
-
-    const isNextDayEnd = end.includes(","); // Indicates end is on the next day
-    const endTime = end.replace(/.*?,/, "").trim(); // Remove date prefix if present
-
-    return [
-        parseTime(startTime, baseDate, isNextDayStart), // Pass `isNextDay` for start
-        parseTime(endTime, baseDate, isNextDayEnd),     // Pass `isNextDay` for end
-    ];
-};
-
-    // Function to validate time interval
-    const validateInterval = (start, end) => {
-        if (!start || !end) {
-            console.log("Invalid Interval:", start, end);
-            return false;
-        }
-        console.log("Valid Interval:", start, end);
-        return true;
-    };
-// Combine Muhurat and Panchangam data
-useEffect(() => {
-    const today = new Date();
-    const mergedData = [];
-    let i = 0;
-    console.log("Processing Panchangam Data...");
-
-    // Iterate through Muhurat Data first
-    muhuratData.forEach((muhuratItem) => {
-        const [muhuratStart, muhuratEnd] = splitInterval(muhuratItem.time, today);
-        console.log("muhuratStart: ", muhuratStart);
-        console.log("muhuratEnd: ", muhuratEnd);
-        if (muhuratStart && muhuratEnd && validateInterval(muhuratStart, muhuratEnd)) {
-            console.log("Valid Muhurat Interval: ", muhuratItem);
-
-            // Temporary array to collect weekday objects for this Muhurat
-            const weekdaysArray = [];
-
-            // Now iterate through Panchangam data
-            panchangamData.forEach((panchangamItem) => {
-                const timeInterval = panchangamItem.timeInterval1; // Only use timeInterval1
-                const [start, end] = splitInterval(timeInterval, today);
-                console.log("CheckOKK: ", start);
-                console.log("endcheck: ", end);
-                if (start && end && validateInterval(start, end)) {
-                    console.log("Valid Panchangam Interval: ", panchangamItem);
-
-                    // Check if Panchangam falls within any Muhurat interval
-                    if (start <= muhuratEnd && end >= muhuratStart) {
-                        // Add unique weekday values as objects to the temporary array
-                        if (!weekdaysArray.find((item) => item.weekday === panchangamItem.weekday)) {
-                            weekdaysArray.push({
-                                weekday: panchangamItem.weekday,
-                                time: `${start.toLocaleTimeString()} - ${end.toLocaleTimeString()}`,
-                            });
-                        }
-                    }
-                } else {
-                    console.log("Invalid Panchangam Interval:", panchangamItem);
-                }
-            });
-
-            // After collecting weekdays, add to mergedData
-            mergedData.push({
-                sno: i + 1,
-                type: "Muhurat",
-                description: `${muhuratItem.muhurat} - ${muhuratItem.category}`,
-                timeInterval: muhuratItem.time,
-                weekdays: weekdaysArray.length > 0 ? weekdaysArray : [{ weekday: "-", time: "-" }], // Add as nested rows
-            });
-            i++;
-        } else {
-            console.log("Invalid Muhurat Interval:", muhuratItem);
-        }
-    });
-
-    console.log("Processing Muhurat Data...");
-    console.log("Final Merged Data: ", mergedData);
-    setFinalData(mergedData);
-}, [muhuratData, panchangamData]);
-
-    // const getMuhuratData = () => {
-    //     setisSearching(true);
-    //     setCityAndDate(city,date);
-    //     sessionStorage.setItem('search', true);
-
-    // };
-
-    // useEffect to handle side effects
-    useEffect(() => {
-        if (isSearching) {
-            console.log('Fetching muhurat data...');
-            // Simulate data fetch or perform some action
-            setTimeout(() => {
-                console.log('Muhurat data fetched!');
-                setIsSearching(false); // Reset the state after the operation
-            }, 2000);
-        }
-    }, [isSearching]);
-
-    // // Helper function to format time without seconds
-    // const formatTime = (date) => {
-    //     const hours = date.getHours();
-    //     const minutes = date.getMinutes();
-    //     const period = hours >= 12 ? "PM" : "AM";
-    //     const hour12 = hours % 12 || 12; // Convert 24-hour to 12-hour format
-    //     const minuteFormatted = minutes < 10 ? `0${minutes}` : minutes;
-
-    //     console.log("Formatted Time: ", `${hour12}:${minuteFormatted} ${period}`);
-    //     return `${hour12}:${minuteFormatted} ${period}`;
-    // };
-
- 
-    return (
-        <div style={{ padding: "20px" }}>
-            <h1 style={{ textAlign: "center" }}>Combined Good Timings</h1>
+      }, [fetchData]); // Runs when fetchData changes
     
-            {finalData.length > 0 ? (
-                <table id="muhurats-table"
-                    border="1"
-                    cellSpacing="0"
-                    cellPadding="5"
-                    style={{ width: "100%", textAlign: "left" }}
-                >
-                    <thead>
-                        <tr>
-                            <th>SNO</th>
-                            <th>Type</th>
-                            <th>Description</th>
-                            <th>Time & Interval</th>
-                            <th>Weekday</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {finalData.map((item, index) => (
-                            <tr key={index}>
-                                <td>{item.sno}</td>
-                                <td>{item.type}</td>
-                                <td>{item.description}</td>
-                                <td>{item.timeInterval}</td>
-                                <td>
-                                    {item.weekdays.length === 1 && item.weekdays[0].weekday === "-" ? (
-                                        "-" // Display "-" when no weekdays are available
-                                    ) : (
-                                        <table style={{ width: "100%", border: "none" }}>
-                                            <tbody>
-                                                {item.weekdays.map((weekdayItem, subIndex) => (
-                                                    <tr key={subIndex}>
-                                                        <td style={{ border: "none", padding: "0" }}>
-                                                            <strong>{weekdayItem.weekday}</strong>:{" "}
-                                                            {weekdayItem.time}
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            ) : (
-                <p style={{ textAlign: "center" }}>
-                    No data available. Please fetch data from the relevant pages.(Select Good Timings only option)
-                </p>
-            )}
-                 <TableScreenshot tableId="muhurats-table" city={city} />
+  
+  // Fetch Muhurat and Bharagv Data together
+  const fetchMuhuratData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      // Set goodTimingsOnly to true by default
+      const goodTimingsOnly = true;
+
+      // Fetch both Muhurat and Bharagv Data with updated parameters
+      const [muhurthaResponse, bharagvResponse] = await Promise.all([
+        fetch(
+            `${process.env.REACT_APP_API_URL}/api/getDrikTable?city=${city}&date=${convertToDDMMYYYY(date)}&goodTimingsOnly=${showNonBlue}`
+          ),
+          
+        fetch(
+          `${process.env.REACT_APP_API_URL}/api/getBharagvTable?city=${city}&date=${date}&showNonBlue=${showNonBlue}&is12HourFormat=${is12HourFormat}`
+        ),
+      ]);
+
+      // Parse the responses as JSON
+      const muhurthaData = await muhurthaResponse.json();
+      const bharagvData = await bharagvResponse.json();
+
+      console.log("DATA Muhurat", muhurthaData);
+      console.log("DATA Bharagv", bharagvData);
+
+      setMuhurthaData(muhurthaData);
+      setBharagvData(bharagvData);
+
+      // Combine the fetched data
+      const combinedResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/combine`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          muhuratData: muhurthaData,
+          panchangamData: bharagvData,
+          city: city,
+          date: date,
+        }),
+      });
+      const combinedData = await combinedResponse.json();
+      console.log("DATA combinedData", combinedData);
+      setCombinedData(combinedData);
+
+      // Calculate weekday
+      const weekday = new Date(date).toLocaleString('en-US', { weekday: 'long' });
+      setWeekday(weekday);
+    } catch (error) {
+      setError("Error fetching data. Please try again.");
+      console.error("Error fetching data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="content">
+      {error && <div className="error-message">{error}</div>}
+
+      <div style={{ textAlign: 'center', margin: '20px' }}>
+        <h1>Combined Muhurat and Bharagv Table</h1>
+        <label className="entercity">Enter City Name:</label>
+        <input
+          className="city"
+          type="text"
+          value={city}
+          onChange={handleCityChange}
+          placeholder="Enter city"
+        />
+        {/* {!fetchCity && !city && <p>Auto-detecting city...</p>} */}
+      </div>
+
+      <div style={{ textAlign: "center", margin: "20px" }}>
+        <label className="date">Enter Date:</label>
+        <input
+          className="enterdate"
+          type="date"
+          value={date}
+          onChange={handleDateChange}
+        />
+      </div>
+
+      <div style={{ textAlign: "center", margin: "20px" }}>
+        <label className="showNonBlue">
+          Show Non-Blue Timings:
+          <input
+            type="checkbox"
+            checked={showNonBlue}
+            onChange={handleShowNonBlueChange}
+          />
+        </label>
+        <label className="is12HourFormat">
+          12 Hour Format(NOT WORKING AT PRESENT):
+          <input
+            type="checkbox"
+            checked={is12HourFormat}
+            onChange={handle12HourFormatChange}
+          />
+        </label>
+      </div>
+
+      <div style={{ textAlign: "center", margin: "20px" }}>
+        <button className="fetch-btn" onClick={checkAndFetchPanchangam} disabled={loading}>
+          {loading ? "Fetching Data..." : "Get Muhurat"}
+        </button>
+      </div>
+
+      {loading && (
+        <div className="loading-spinner">
+          <div className="spinner"></div>
         </div>
-    );
-    
+      )}
+
+      {/* Inline City, Date, Weekday Info (Compact Layout) */}
+      {combinedData && !loading && (
+        <div className="info-inline">
+          <div className="info-inline-item">
+            <strong>City:</strong> {city}
+          </div>
+          <div className="info-inline-item">
+            <strong>Date:</strong> {date}
+          </div>
+          <div className="info-inline-item">
+            <strong>Weekday:</strong> {weekday}
+          </div>
+        </div>
+      )}
+
+      {/* {combinedData && !loading && (
+        <table id="tableToCapture" border="1">
+          <thead>
+            <tr>
+              <th>SNO</th>
+              <th>TYPE</th>
+              <th>DESCRIPTION</th>
+              <th>TIME & INTERVAL</th>
+              <th>WEEKDAY</th>
+            </tr>
+          </thead>
+          <tbody>
+            {combinedData.map((row, index) => (
+              <React.Fragment key={index}>
+                <tr>
+                  <td>{row.sno}</td>
+                  <td>{row.type}</td>
+                  <td>{row.description}</td>
+                  <td>{row.timeInterval}</td>
+                  <td>
+                    {row.weekdays && row.weekdays.length > 0 ? (
+                      <table>
+                        <tbody>
+                          {row.weekdays.map((weekday, subIndex) => (
+                            <tr key={subIndex}>
+                              <td>{weekday.weekday}: {weekday.time}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                </tr>
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      )} */}
+
+      
+{combinedData && (
+        <table id="tableToCapture" border="1">
+          {/* Table Headers */}
+          <thead>
+            <tr>
+              <th>SNO</th>
+              <th>TYPE</th>
+              <th>DESCRIPTION</th>
+              <th>TIME & INTERVAL</th>
+              <th>WEEKDAY</th>
+            </tr>
+          </thead>
+          {/* Table Body */}
+          <tbody>
+            {combinedData.map((row, index) => (
+              <tr key={index}>
+                <td>{row.sno}</td>
+                <td>{row.type}</td>
+                <td>{row.description}</td>
+                <td>{row.timeInterval}</td>
+                <td>
+                  {row.weekdays && row.weekdays.map((wd, i) => (
+                    <div key={i}>{wd.weekday}: {wd.time}</div>
+                  ))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {combinedData && !loading && <TableScreenshot tableId="tableToCapture" city={city} date={date} weekday={weekday} />}
+    </div>
+  );
 };
 
-export default Combine;
+export default CombinePage;

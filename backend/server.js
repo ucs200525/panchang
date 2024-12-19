@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const logger = require('./utils/logger');
 const dotenv = require('dotenv');
 const panchangRoutes = require('./routes/panchangRoutes');
+const newRoutes = require('./routes/newRoutes');
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use(morgan('combined'));
 
 // Routes
 app.use('/api', panchangRoutes);
+
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
