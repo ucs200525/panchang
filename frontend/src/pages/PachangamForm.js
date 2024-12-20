@@ -279,9 +279,9 @@ useEffect(() => {
             <th>weekday</th>
             <th>Start 2</th>
             <th>End 2</th>
-            <th>sNo</th>
-            <th>value 1</th>
-            <th>value2</th>
+            <th>S.No</th>
+            {/* <th>value 1</th>
+            <th>value2</th> */}
           </tr>
         </thead>
         <tbody>
@@ -304,8 +304,8 @@ useEffect(() => {
               <td>{item.start2}</td>
               <td>{item.end2}</td>
               <td>{item.sNo}</td>
-              <td>{item.value1}</td>
-              <td>{item.value2}</td>
+              {/* <td>{item.value1}</td>
+              <td>{item.value2}</td> */}
 
             </tr>
           ))}

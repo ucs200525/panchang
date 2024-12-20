@@ -272,18 +272,7 @@ p {
     
 }
 
-    /* Hide the last two <th> elements in the <tr> */
-    thead th:nth-last-child(1),
-    thead th:nth-last-child(2),
-    thead th:nth-last-child(3) {
-     display:none ; /* or visibility: hidden; */
-}
 
-    tbody td:nth-last-child(1),
-    tbody td:nth-last-child(2),
-    thead th:nth-last-child(3)  {
-    display:none /* or visibility: hidden; */
-}
 
 th, td {
     border: 1px solid #000;

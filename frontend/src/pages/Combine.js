@@ -158,11 +158,10 @@ const CombinePage = () => {
       setLoading(false);
     }
   };
-
   return (
     <div className="content">
       {error && <div className="error-message">{error}</div>}
-
+  
       <div style={{ textAlign: 'center', margin: '20px' }}>
         <h1>Combined Muhurat and Bharagv Table</h1>
         <label className="entercity">Enter City Name:</label>
@@ -173,9 +172,8 @@ const CombinePage = () => {
           onChange={handleCityChange}
           placeholder="Enter city"
         />
-        {/* {!fetchCity && !city && <p>Auto-detecting city...</p>} */}
       </div>
-
+  
       <div style={{ textAlign: "center", margin: "20px" }}>
         <label className="date">Enter Date:</label>
         <input
@@ -183,9 +181,16 @@ const CombinePage = () => {
           type="date"
           value={date}
           onChange={handleDateChange}
+          style={{
+            padding: "10px",
+            border: "1px solid #cccccc",
+            borderRadius: "5px",
+            fontSize: "16px",
+            margin: "10px 0",
+          }}
         />
       </div>
-
+  
       <div style={{ textAlign: "center", margin: "20px" }}>
         <label className="showNonBlue">
           Show Non-Blue Timings:
@@ -204,19 +209,33 @@ const CombinePage = () => {
           />
         </label>
       </div>
-
-      <div style={{ textAlign: "center", margin: "20px" }}>
-        <button className="fetch-btn" onClick={checkAndFetchPanchangam} disabled={loading}>
+  
+      <div style={{ display: "flex", justifyContent: "center", margin: "20px" }}>
+        <button
+          className="fetch-btn"
+          onClick={checkAndFetchPanchangam}
+          disabled={loading}
+          style={{
+            backgroundColor: "#007BFF",
+            color: "white",
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "16px",
+            transition: "background-color 0.3s ease",
+          }}
+        >
           {loading ? "Fetching Data..." : "Get Muhurat"}
         </button>
       </div>
-
+  
       {loading && (
         <div className="loading-spinner">
           <div className="spinner"></div>
         </div>
       )}
-
+  
       {/* Inline City, Date, Weekday Info (Compact Layout) */}
       {combinedData && !loading && (
         <div className="info-inline">
@@ -231,8 +250,8 @@ const CombinePage = () => {
           </div>
         </div>
       )}
-
-      {/* {combinedData && !loading && (
+  
+      {combinedData && !loading && (
         <table id="tableToCapture" border="1">
           <thead>
             <tr>
@@ -257,7 +276,7 @@ const CombinePage = () => {
                         <tbody>
                           {row.weekdays.map((weekday, subIndex) => (
                             <tr key={subIndex}>
-                              <td>{weekday.weekday}: {weekday.time}</td>
+                              <td><strong>{weekday.weekday}</strong>: {weekday.time}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -271,43 +290,12 @@ const CombinePage = () => {
             ))}
           </tbody>
         </table>
-      )} */}
-
-      
-{combinedData && (
-        <table id="tableToCapture" border="1">
-          {/* Table Headers */}
-          <thead>
-            <tr>
-              <th>SNO</th>
-              <th>TYPE</th>
-              <th>DESCRIPTION</th>
-              <th>TIME & INTERVAL</th>
-              <th>WEEKDAY</th>
-            </tr>
-          </thead>
-          {/* Table Body */}
-          <tbody>
-            {combinedData.map((row, index) => (
-              <tr key={index}>
-                <td>{row.sno}</td>
-                <td>{row.type}</td>
-                <td>{row.description}</td>
-                <td>{row.timeInterval}</td>
-                <td>
-                  {row.weekdays && row.weekdays.map((wd, i) => (
-                    <div key={i}>{wd.weekday}: {wd.time}</div>
-                  ))}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       )}
-
+  
       {combinedData && !loading && <TableScreenshot tableId="tableToCapture" city={city} date={date} weekday={weekday} />}
     </div>
   );
+  
 };
 
 export default CombinePage;

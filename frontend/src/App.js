@@ -27,7 +27,6 @@ import './pages/style.css';
 import './pages/PanchakaMuhurth.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PachangamForm from './pages/PachangamForm';
-import NewCombine from './pages/NewCombine';
 import PanchakaMuhurth from './pages/PanchakaMuhurth';
 import Combine from './pages/Combine';
 import Navbar from './components/Navbar';
@@ -39,7 +38,6 @@ function App() {
       <Navbar />
       <Routes>
       <Route path="/" element={<PachangamForm />} />
-      <Route path="/NewCombine" element={<NewCombine />} />
         <Route path="/panchaka" element={<PanchakaMuhurth />} />
         <Route path="/combine" element={<Combine />} />
         {/* Add more routes here if needed */}
