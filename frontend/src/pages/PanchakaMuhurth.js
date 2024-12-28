@@ -8,7 +8,7 @@ import CityAndDateInput from '../components/CityAndDateInput';
 const PanchakaMuhurth = () => {
     
     const [city, setCity] = useState('');
-    const [date, setDate] = useState('null');
+    const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
     const { localCity, localDate, setCityAndDate  } = useAuth();
     const [allMuhuratData, setAllMuhuratData] = useState([]);
    const [filteredData, setFilteredData] = useState(() => {
@@ -119,7 +119,7 @@ const PanchakaMuhurth = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ city, date })
+            body: JSON.stringify({ city, date: convertToDDMMYYYY(date) })
         })
             .then(response => response.json())
             .then(data => {
@@ -152,6 +152,10 @@ const PanchakaMuhurth = () => {
       await autoGeolocation();
       
     }
+  };
+  const convertToDDMMYYYY = (date) => {
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`;
   };
 
     const filterGoodTimings = () => {
@@ -200,11 +204,41 @@ const PanchakaMuhurth = () => {
       };
 
     return (
-        <div className="PanchakaMuhurthContent">
-            <h1>Panchaka Muhurat</h1>
-            
+
+    <div className="PanchakaMuhurthContent">
+        {error && <div className="error-message">{error}</div>}
+  
+      <div style={{ textAlign: 'center', margin: '20px' }}>
+      <h1>Panchaka Muhurat Table</h1>
+        <label className="entercity">Enter City Name:</label>
+        <input
+          className="city"
+          type="text"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          placeholder="Enter city"
+        />
+      </div>
+  
+      <div style={{ textAlign: "center", margin: "20px" }}>
+        <label className="date">Enter Date:</label>
+        <input
+          className="enterdate"
+          type="date"
+          value={date}
+          onChange={handleDateChange}
+          style={{
+            padding: "10px",
+            border: "1px solid #cccccc",
+            borderRadius: "5px",
+            fontSize: "16px",
+            margin: "10px 0",
+          }}
+        />
+      </div>
+  
             <div className="cityAndDate">
-                <label htmlFor="city">City:</label>
+                {/* <label htmlFor="city">City:</label>
                 <input
                     type="text"
                     id="city"
@@ -213,24 +247,20 @@ const PanchakaMuhurth = () => {
                     onChange={(e) => setCity(e.target.value)}
                 />
                 <br />
-                <label htmlFor="date">Date (DD/MM/YYYY):</label>
+                <label className="date">Enter Date:</label>
                 <input
-                    type="date"
-                    id="date"
-                    placeholder="Enter date"
-                    value={date.split("/").reverse().join("-")} // Convert from DD/MM/YYYY to YYYY-MM-DD for the input
-                    onChange={handleDateChange}
-                />
-                <br />
-
-
-                {/* <CityAndDateInput
-                        onCityChange={handleCityChange}
-                        onDateChange={handleDateChange}
-                        initialCity={city}
-                        initialDate={date}
-                    /> */}
-                {/* <button onClick={getMuhuratData}>Get Muhurat</button> */}
+                className="enterdate"
+                type="date"
+                value={date}
+                onChange={handleDateChange}
+                style={{
+                    padding: "10px",
+                    border: "1px solid #cccccc",
+                    borderRadius: "5px",
+                    fontSize: "16px",
+                    margin: "10px 0",
+                }}
+                /> */}
                 <button onClick={checkAndFetchPanchangam}>Get Muhurat</button>
                 <button onClick={toggleShowAllRows}>
                     {showAll ? "Good Timings Only" : "Show All Rows"}
@@ -240,6 +270,7 @@ const PanchakaMuhurth = () => {
             {loading && <LoadingSpinner />} {/* Show the spinner when loading */}
 
             <h2>Result</h2>
+        <div  id="muhurats-table" >
             <div className="info-inline">
           <div className="info-inline-item">
             <strong>City:</strong> {city}
@@ -249,7 +280,7 @@ const PanchakaMuhurth = () => {
           </div>
 
         </div>
-            <table id="muhurats-table" border="1" cellspacing="0" cellpadding="5">
+            <table border="1" cellspacing="0" cellpadding="5">
                 <thead>
                     <tr>
                         <th>Muhurat and Category</th>
@@ -260,8 +291,10 @@ const PanchakaMuhurth = () => {
                     {renderTableRows(filteredData)}
                 </tbody>
             </table>
+            </div>
             <TableScreenshot tableId="muhurats-table" city={city} />
         </div>
+        
     );
 };
 

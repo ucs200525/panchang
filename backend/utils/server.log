@@ -8472,3 +8472,120 @@
 2024-12-19T19:00:16.290Z [WARN]: input     
 2024-12-19T19:00:16.292Z [WARN]: closestDay     Monday
 2024-12-28T06:39:55.093Z [INFO]: Server is running on port 4000
+2024-12-28T06:40:23.984Z [WARN]: weekday     
+2024-12-28T06:40:23.987Z [WARN]: input     
+2024-12-28T06:40:23.996Z [WARN]: closestDay     Monday
+2024-12-28T06:40:52.580Z [INFO]: limit, remaining, reset:250024871735430400
+2024-12-28T06:40:52.619Z [ERROR]: get sun times: Vijayawada
+2024-12-28T06:40:52.621Z [ERROR]: get sun times2: 2024-12-28
+2024-12-28T06:40:52.932Z [INFO]: GeoName ID:1253184
+2024-12-28T06:40:53.005Z [INFO]: limit , remaining , reset :250024861735430400
+2024-12-28T06:40:53.006Z [ERROR]: get lang lat time : 16.511530680.6160469Asia/Kolkata
+2024-12-28T06:40:53.007Z [ERROR]: get sun times3: [object Object]
+2024-12-28T06:40:53.969Z [INFO]: Sunrise and Sunset for today: 06:33:24, 17:44:58
+2024-12-28T06:40:54.199Z [INFO]: Sunrise for tomorrow: 06:33:49
+2024-12-28T06:40:54.201Z [WARN]: dateString     2024-12-28
+2024-12-28T06:40:54.203Z [WARN]: weekday     Saturday
+2024-12-28T06:40:54.204Z [WARN]: input     Saturday
+2024-12-28T06:40:54.205Z [WARN]: closestDay     Saturday
+2024-12-28T06:41:40.229Z [ERROR]: get sun times: Chennai
+2024-12-28T06:41:40.230Z [ERROR]: get sun times2: 2024-12-28
+2024-12-28T06:41:40.532Z [INFO]: GeoName ID:1264527
+2024-12-28T06:41:40.895Z [INFO]: limit , remaining , reset :250024851735430400
+2024-12-28T06:41:40.896Z [ERROR]: get lang lat time : 13.083693980.270186Asia/Kolkata
+2024-12-28T06:41:40.899Z [ERROR]: get sun times3: [object Object]
+2024-12-28T06:41:41.628Z [INFO]: Sunrise and Sunset for today: 06:28:32, 17:52:36
+2024-12-28T06:41:41.867Z [INFO]: Sunrise for tomorrow: 06:28:58
+2024-12-28T06:41:41.868Z [WARN]: dateString     2024-12-28
+2024-12-28T06:41:41.870Z [WARN]: weekday     Saturday
+2024-12-28T06:41:41.872Z [WARN]: input     Saturday
+2024-12-28T06:41:41.874Z [WARN]: closestDay     Saturday
+2024-12-28T06:42:01.830Z [INFO]: limit, remaining, reset:250024841735430400
+2024-12-28T06:42:01.843Z [ERROR]: get sun times: Vijayawada
+2024-12-28T06:42:01.844Z [ERROR]: get sun times2: 2024-12-28
+2024-12-28T06:42:02.195Z [INFO]: limit , remaining , reset :250024831735430400
+2024-12-28T06:42:02.196Z [ERROR]: get lang lat time : 16.511530680.6160469Asia/Kolkata
+2024-12-28T06:42:02.197Z [ERROR]: get sun times3: [object Object]
+2024-12-28T06:42:02.209Z [INFO]: GeoName ID:1253184
+2024-12-28T06:42:02.914Z [INFO]: Sunrise and Sunset for today: 06:33:24, 17:44:58
+2024-12-28T06:42:03.146Z [INFO]: Sunrise for tomorrow: 06:33:49
+2024-12-28T06:42:03.147Z [WARN]: dateString     2024-12-28
+2024-12-28T06:42:03.149Z [WARN]: weekday     Saturday
+2024-12-28T06:42:03.149Z [WARN]: input     Saturday
+2024-12-28T06:42:03.150Z [WARN]: closestDay     Saturday
+2024-12-28T06:42:08.323Z [ERROR]: get sun times: chennai
+2024-12-28T06:42:08.323Z [ERROR]: get sun times2: 2024-12-28
+2024-12-28T06:42:08.610Z [INFO]: GeoName ID:1264527
+2024-12-28T06:42:09.805Z [INFO]: limit , remaining , reset :250024821735430400
+2024-12-28T06:42:09.806Z [ERROR]: get lang lat time : 13.083693980.270186Asia/Kolkata
+2024-12-28T06:42:09.806Z [ERROR]: get sun times3: [object Object]
+2024-12-28T06:42:10.500Z [INFO]: Sunrise and Sunset for today: 06:28:32, 17:52:36
+2024-12-28T06:42:10.732Z [INFO]: Sunrise for tomorrow: 06:28:58
+2024-12-28T06:42:10.733Z [WARN]: dateString     2024-12-28
+2024-12-28T06:42:10.735Z [WARN]: weekday     Saturday
+2024-12-28T06:42:10.736Z [WARN]: input     Saturday
+2024-12-28T06:42:10.737Z [WARN]: closestDay     Saturday
+2024-12-28T06:42:37.792Z [ERROR]: get sun times: vijayawada
+2024-12-28T06:42:37.794Z [ERROR]: get sun times2: 2024-12-28
+2024-12-28T06:42:38.106Z [INFO]: GeoName ID:1253184
+2024-12-28T06:42:38.579Z [INFO]: limit , remaining , reset :250024811735430400
+2024-12-28T06:42:38.579Z [ERROR]: get lang lat time : 16.511530680.6160469Asia/Kolkata
+2024-12-28T06:42:38.581Z [ERROR]: get sun times3: [object Object]
+2024-12-28T06:42:39.277Z [INFO]: Sunrise and Sunset for today: 06:33:24, 17:44:58
+2024-12-28T06:42:39.509Z [INFO]: Sunrise for tomorrow: 06:33:49
+2024-12-28T06:42:39.511Z [WARN]: dateString     2024-12-28
+2024-12-28T06:42:39.512Z [WARN]: weekday     Saturday
+2024-12-28T06:42:39.513Z [WARN]: input     Saturday
+2024-12-28T06:42:39.514Z [WARN]: closestDay     Saturday
+2024-12-28T06:42:52.023Z [ERROR]: get sun times: chennai
+2024-12-28T06:42:52.024Z [ERROR]: get sun times2: 2024-12-28
+2024-12-28T06:42:52.329Z [INFO]: GeoName ID:1264527
+2024-12-28T06:42:52.694Z [INFO]: limit , remaining , reset :250024801735430400
+2024-12-28T06:42:52.695Z [ERROR]: get lang lat time : 13.083693980.270186Asia/Kolkata
+2024-12-28T06:42:52.696Z [ERROR]: get sun times3: [object Object]
+2024-12-28T06:42:53.379Z [INFO]: Sunrise and Sunset for today: 06:28:32, 17:52:36
+2024-12-28T06:42:53.605Z [INFO]: Sunrise for tomorrow: 06:28:58
+2024-12-28T06:42:53.607Z [WARN]: dateString     2024-12-28
+2024-12-28T06:42:53.609Z [WARN]: weekday     Saturday
+2024-12-28T06:42:53.609Z [WARN]: input     Saturday
+2024-12-28T06:42:53.610Z [WARN]: closestDay     Saturday
+2024-12-28T06:42:56.374Z [WARN]: weekday     Saturday
+2024-12-28T06:42:56.376Z [WARN]: input     Saturday
+2024-12-28T06:42:56.376Z [WARN]: closestDay     Saturday
+2024-12-28T06:42:59.681Z [WARN]: weekday     Saturday
+2024-12-28T06:42:59.684Z [WARN]: input     Saturday
+2024-12-28T06:42:59.684Z [WARN]: closestDay     Saturday
+2024-12-28T06:43:14.970Z [WARN]: weekday     Saturday
+2024-12-28T06:43:14.972Z [WARN]: input     Saturday
+2024-12-28T06:43:14.973Z [WARN]: closestDay     Saturday
+2024-12-28T06:43:17.743Z [INFO]: limit, remaining, reset:250024791735430400
+2024-12-28T06:43:17.762Z [ERROR]: get sun times: Vijayawada
+2024-12-28T06:43:17.763Z [ERROR]: get sun times2: 2024-12-28
+2024-12-28T06:43:18.193Z [INFO]: limit , remaining , reset :250024781735430400
+2024-12-28T06:43:18.194Z [ERROR]: get lang lat time : 16.511530680.6160469Asia/Kolkata
+2024-12-28T06:43:18.195Z [ERROR]: get sun times3: [object Object]
+2024-12-28T06:43:18.957Z [INFO]: Sunrise and Sunset for today: 06:33:24, 17:44:58
+2024-12-28T06:43:19.243Z [INFO]: Sunrise for tomorrow: 06:33:49
+2024-12-28T06:43:19.256Z [WARN]: dateString     2024-12-28
+2024-12-28T06:43:19.370Z [WARN]: weekday     Saturday
+2024-12-28T06:43:19.396Z [WARN]: input     Saturday
+2024-12-28T06:43:19.406Z [WARN]: closestDay     Saturday
+2024-12-28T06:43:52.053Z [WARN]: weekday     
+2024-12-28T06:43:52.053Z [WARN]: input     
+2024-12-28T06:43:52.054Z [WARN]: closestDay     Monday
+2024-12-28T06:46:11.177Z [INFO]: limit, remaining, reset:250024701735430400
+2024-12-28T06:46:11.220Z [ERROR]: get sun times: Vijayawada
+2024-12-28T06:46:11.224Z [ERROR]: get sun times2: 2024-12-28
+2024-12-28T06:46:11.531Z [INFO]: GeoName ID:1253184
+2024-12-28T06:46:11.586Z [INFO]: limit , remaining , reset :250024691735430400
+2024-12-28T06:46:11.587Z [ERROR]: get lang lat time : 16.511530680.6160469Asia/Kolkata
+2024-12-28T06:46:11.588Z [ERROR]: get sun times3: [object Object]
+2024-12-28T06:46:12.560Z [INFO]: Sunrise and Sunset for today: 06:33:24, 17:44:58
+2024-12-28T06:46:12.799Z [INFO]: Sunrise for tomorrow: 06:33:49
+2024-12-28T06:46:12.801Z [WARN]: dateString     2024-12-28
+2024-12-28T06:46:12.803Z [WARN]: weekday     Saturday
+2024-12-28T06:46:12.804Z [WARN]: input     Saturday
+2024-12-28T06:46:12.805Z [WARN]: closestDay     Saturday
+2024-12-28T06:47:25.374Z [WARN]: weekday     Saturday
+2024-12-28T06:47:25.375Z [WARN]: input     Saturday
+2024-12-28T06:47:25.375Z [WARN]: closestDay     Saturday

@@ -255,7 +255,7 @@ useEffect(() => {
           </div>
         </div>
       </div>
-
+<div id="tableToCapture">
         <div className="info-inline">
           <div className="info-inline-item">
             <strong>City:</strong> {cityName}
@@ -271,12 +271,12 @@ useEffect(() => {
 
       <div>
      
-      <table  id="tableToCapture" border="1">
+      <table>
         <thead>
           <tr>
             <th>Start 1</th>
             <th>End 1</th>
-            <th>weekday</th>
+            <th>{weekday}</th> 
             <th>Start 2</th>
             <th>End 2</th>
             <th>S.No</th>
@@ -312,7 +312,7 @@ useEffect(() => {
         </tbody>
       </table>
     </div>
-   
+    </div>
     <TableScreenshot tableId="tableToCapture" city={cityName} />
 
     </div>

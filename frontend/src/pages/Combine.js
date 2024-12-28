@@ -4,7 +4,6 @@ import TableScreenshot from '../components/TableScreenshot';
 const CombinePage = () => {
   const [city, setCity] = useState('');
   const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
-  ;
   const [combinedData, setCombinedData] = useState(() => {
     const storedData = sessionStorage.getItem('combinedData');
     return storedData ? JSON.parse(storedData) : null;
@@ -190,7 +189,7 @@ const CombinePage = () => {
           }}
         />
       </div>
-  
+
       <div style={{ textAlign: "center", margin: "20px" }}>
         <label className="showNonBlue">
             Good Timings only :
@@ -235,7 +234,7 @@ const CombinePage = () => {
           <div className="spinner"></div>
         </div>
       )}
-  
+  <div id="tableToCapture">
       {/* Inline City, Date, Weekday Info (Compact Layout) */}
       {combinedData && !loading && (
         <div className="info-inline">
@@ -252,7 +251,7 @@ const CombinePage = () => {
       )}
   
       {combinedData && !loading && (
-        <table id="tableToCapture">
+        <table >
           <thead>
             <tr>
               <th>SNO</th>
@@ -293,6 +292,7 @@ const CombinePage = () => {
       )}
   
       {combinedData && !loading && <TableScreenshot tableId="tableToCapture" city={city} date={date} weekday={weekday} />}
+    </div>
     </div>
   );
   
