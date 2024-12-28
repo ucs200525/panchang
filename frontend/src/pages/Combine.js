@@ -193,7 +193,7 @@ const CombinePage = () => {
   
       <div style={{ textAlign: "center", margin: "20px" }}>
         <label className="showNonBlue">
-          Show Non-Blue Timings:
+            Good Timings only :
           <input
             type="checkbox"
             checked={showNonBlue}
@@ -252,7 +252,7 @@ const CombinePage = () => {
       )}
   
       {combinedData && !loading && (
-        <table id="tableToCapture" border="1">
+        <table id="tableToCapture">
           <thead>
             <tr>
               <th>SNO</th>

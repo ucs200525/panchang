@@ -5,8 +5,8 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <Link to="/">Home</Link>
-      <Link to="/panchaka">PanchakaMuhurtha</Link>
-      <Link to="/combine">Good Time Today</Link>
+      <Link to="/panchaka">Panchaka Rahita</Link>
+      <Link to="/combine">Good Timings</Link>
     </div>
   );
 };
