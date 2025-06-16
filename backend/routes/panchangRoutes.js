@@ -6,7 +6,7 @@ const fetch = require('node-fetch'); // Make sure to install node-fetch if you h
 const axios = require('axios');
 const cheerio = require('cheerio');
 const path = require('path');
-
+const puppeteer = require('puppeteer');
 
 // Function to fetch coordinates and time zone based on the city name
 async function fetchCoordinates(city) {
@@ -816,6 +816,134 @@ const parseTime = (timeStr, baseDate, isNextDay = false) => {
   
   
 
+// Add this new API endpoint after your existing /combine endpoint
+router.post("/combine-image", async (req, res) => {
+    const { muhuratData, panchangamData, city, date } = req.body;
+
+    if (!muhuratData || !panchangamData || !city || !date) {
+        return res.status(400).json({ error: "Invalid input data" });
+    }
+
+    try {
+        const baseDate = new Date(date);
+        const finalData = processMuhuratAndPanchangam(muhuratData, panchangamData, baseDate);
+
+        // Generate HTML content for the image
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        padding: 20px;
+                        background: #ffffff;
+                    }
+                    .header {
+                        text-align: center;
+                        margin-bottom: 20px;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-bottom: 20px;
+                    }
+                    th, td {
+                        border: 1px solid #ddd;
+                        padding: 12px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #f5f5f5;
+                    }
+                    .weekday-list {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+                    }
+                    .weekday-item {
+                        margin: 5px 0;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h2>Combined Muhurat and Panchangam Data</h2>
+                    <h3>${city} - ${date}</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Time Interval</th>
+                            <th>Associated Weekdays</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${finalData.map(item => `
+                            <tr>
+                                <td>${item.sno}</td>
+                                <td>${item.type}</td>
+                                <td>${item.description}</td>
+                                <td>${item.timeInterval}</td>
+                                <td>
+                                    <ul class="weekday-list">
+                                        ${item.weekdays.map(day => `
+                                            <li class="weekday-item">${day.weekday} ${day.time !== '-' ? `(${day.time})` : ''}</li>
+                                        `).join('')}
+                                    </ul>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </body>
+            </html>
+        `;
+
+        // Launch puppeteer
+        const browser = await puppeteer.launch({
+            headless: 'new',
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+        const page = await browser.newPage();
+
+        // Set content and wait for it to load
+        await page.setContent(htmlContent);
+        await page.setViewport({ width: 1200, height: 800 });
+
+        // Wait for any dynamic content to load
+        await page.evaluate(() => {
+            return new Promise(resolve => {
+                setTimeout(resolve, 1000);
+            });
+        });
+
+        // Take screenshot
+        const screenshot = await page.screenshot({
+            fullPage: true,
+            type: 'png',
+            encoding: 'binary'
+        });
+
+        // Close browser
+        await browser.close();
+
+        // Set response headers
+        res.setHeader('Content-Type', 'image/png');
+        res.setHeader('Content-Disposition', `attachment; filename=combined-data-${city}-${date}.png`);
+
+        // Send the image
+        res.send(screenshot);
+
+    } catch (error) {
+        console.error("Error generating image:", error);
+        res.status(500).json({ error: "Failed to generate image" });
+    }
+});
+
 
 
 
@@ -895,6 +1023,58 @@ router.post('/fetch_muhurat', async (req, res) => {
         res.status(500).send('Error fetching data');
     }
 });
+
+
+router.post('/fetch_muhurat_table', async (req, res) => {
+    const { city, date } = req.body;  
+
+    try {
+        const muhuratData = await fetchmuhurat(city, date);
+
+        let htmlContent = `
+            <html>
+            <head>
+                <style>
+                    table { width: 100%; border-collapse: collapse; }
+                    th, td { border: 1px solid black; padding: 8px; text-align: center; }
+                    th { background-color: #f2f2f2; }
+                </style>
+            </head>
+            <body>
+                <h2>Muhurat Table for ${city} on ${date}</h2>
+                <table>
+                    <tr>
+                        <th>Muhurat</th>
+                        <th>Category</th>
+                        <th>Time</th>
+                    </tr>`;
+
+        muhuratData.forEach(muhurat => {
+            htmlContent += `
+                    <tr>
+                        <td>${muhurat.muhurat}</td>
+                        <td>${muhurat.category}</td>
+                        <td>${muhurat.time}</td>
+                    </tr>`;
+        });
+
+        htmlContent += `</table></body></html>`;
+
+        res.send(htmlContent);  // Send HTML response
+    } catch (error) {
+        console.error("Error generating HTML table:", error);
+        res.status(500).json({ error: "Failed to generate HTML" });
+    }
+});
+
+
+
+
+
+
+
+
+
 
 // Define routes
 router.get('/fetchCoordinates/:city', async (req, res) => {

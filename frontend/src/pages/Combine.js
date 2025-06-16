@@ -295,7 +295,6 @@ const CombinePage = () => {
     </div>
     </div>
   );
-  
 };
 
 export default CombinePage;
