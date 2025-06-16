@@ -6,21 +6,45 @@ const DownloadImage = () => {
     const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [showNonBlue, setShowNonBlue] = useState(true);  // default to true
+    const [is12HourFormat, setIs12HourFormat] = useState(true); // default to true
 
+  const convertToDDMMYYYY = (date) => {
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`;
+  };
     const handleDownload = async () => {
         try {
             setLoading(true);
             setError(null);
 
+            // First fetch muhurat data
+            const muhuratResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/getDrikTable?city=${city}&date=${convertToDDMMYYYY(date)}&goodTimingsOnly=${showNonBlue}`);
+            if (!muhuratResponse.ok) throw new Error('Failed to fetch muhurat data');
+            const muhuratData = await muhuratResponse.json();
+
+            // Then fetch panchangam data
+            const panchangamResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/getBharagvTable?city=${city}&date=${date}&showNonBlue=${showNonBlue}&is12HourFormat=${is12HourFormat}`);
+            if (!panchangamResponse.ok) throw new Error('Failed to fetch panchangam data');
+            const panchangamData = await panchangamResponse.json();
+
+            // Now make the image request with all required data
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/combine-image`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ city, date }),
+                body: JSON.stringify({ 
+                    muhuratData, 
+                    panchangamData,
+                    city, 
+                    date 
+                }),
             });
 
             if (!response.ok) {
+                console.log("Response status:", response.status);
+                console.log("Response status text:", response.statusText);
                 throw new Error('Failed to generate image');
             }
 
@@ -36,6 +60,7 @@ const DownloadImage = () => {
             document.body.removeChild(a);
 
         } catch (err) {
+            console.error("Error:", err);
             setError(err.message);
         } finally {
             setLoading(false);

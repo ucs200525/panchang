@@ -22,7 +22,7 @@ async function fetchCoordinates(city) {
             logger.info("limit , remaining , reset :"+limit + remaining + reset);
             const { lat, lng } = data.results[0].geometry;
             const timeZone = data.results[0].annotations.timezone.name;
-            logger.error('get lang lat time : ' +  lat+ lng+ timeZone);
+            logger.error('get lang lat time : ' +  lat+' ' +lng+ ' ' +timeZone);
             return { lat, lng, timeZone ,limit , remaining , reset}; // Return all required values
         } else {
             throw new Error('City not found');
@@ -816,7 +816,6 @@ const parseTime = (timeStr, baseDate, isNextDay = false) => {
   
   
 
-// Add this new API endpoint after your existing /combine endpoint
 router.post("/combine-image", async (req, res) => {
     const { muhuratData, panchangamData, city, date } = req.body;
 
@@ -828,33 +827,70 @@ router.post("/combine-image", async (req, res) => {
         const baseDate = new Date(date);
         const finalData = processMuhuratAndPanchangam(muhuratData, panchangamData, baseDate);
 
-        // Generate HTML content for the image
+        // Generate HTML content with improved styling
         const htmlContent = `
             <!DOCTYPE html>
             <html>
             <head>
                 <style>
                     body {
-                        font-family: Arial, sans-serif;
-                        padding: 20px;
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        padding: 40px;
+                        background: #f8f9fa;
+                        color: #333;
+                        line-height: 1.6;
+                    }
+                    .container {
+                        max-width: 1200px;
+                        margin: 0 auto;
                         background: #ffffff;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        padding: 30px;
                     }
                     .header {
                         text-align: center;
-                        margin-bottom: 20px;
+                        margin-bottom: 30px;
+                        padding-bottom: 20px;
+                        border-bottom: 2px solid #e9ecef;
+                    }
+                    .header h2 {
+                        color: #2c3e50;
+                        font-size: 28px;
+                        margin-bottom: 10px;
+                    }
+                    .header h3 {
+                        color: #6c757d;
+                        font-size: 20px;
+                        font-weight: normal;
                     }
                     table {
                         width: 100%;
-                        border-collapse: collapse;
-                        margin-bottom: 20px;
+                        border-collapse: separate;
+                        border-spacing: 0;
+                        margin-bottom: 30px;
+                        border-radius: 6px;
+                        overflow: hidden;
                     }
                     th, td {
-                        border: 1px solid #ddd;
-                        padding: 12px;
+                        border: 1px solid #dee2e6;
+                        padding: 15px;
                         text-align: left;
+                        vertical-align: top;
                     }
                     th {
-                        background-color: #f5f5f5;
+                        background-color: #4a90e2;
+                        color: white;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                        font-size: 14px;
+                        letter-spacing: 0.5px;
+                    }
+                    tr:nth-child(even) {
+                        background-color: #f8f9fa;
+                    }
+                    tr:hover {
+                        background-color: #f2f4f6;
                     }
                     .weekday-list {
                         list-style: none;
@@ -862,43 +898,66 @@ router.post("/combine-image", async (req, res) => {
                         margin: 0;
                     }
                     .weekday-item {
-                        margin: 5px 0;
+                        margin: 8px 0;
+                        padding: 6px 10px;
+                        background: #f8f9fa;
+                        border-radius: 4px;
+                        font-size: 14px;
+                    }
+                    .weekday-item:hover {
+                        background: #e9ecef;
+                    }
+                    td:first-child {
+                        font-weight: 600;
+                        color: #495057;
+                    }
+                    td:nth-child(2) {
+                        color: #6c757d;
+                    }
+                    td:nth-child(3) {
+                        color: #2c3e50;
+                    }
+                    td:nth-child(4) {
+                        color: #0056b3;
+                        font-family: monospace;
                     }
                 </style>
             </head>
             <body>
-                <div class="header">
-                    <h2>Combined Muhurat and Panchangam Data</h2>
-                    <h3>${city} - ${date}</h3>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Type</th>
-                            <th>Description</th>
-                            <th>Time Interval</th>
-                            <th>Associated Weekdays</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${finalData.map(item => `
+                <div class="container">
+                    <div class="header">
+                        <h2>Combined Muhurat and Panchangam Data</h2>
+                        <h3>${city} - ${date}</h3>
+                    </div>
+                    <table>
+                        <thead>
                             <tr>
-                                <td>${item.sno}</td>
-                                <td>${item.type}</td>
-                                <td>${item.description}</td>
-                                <td>${item.timeInterval}</td>
-                                <td>
-                                    <ul class="weekday-list">
-                                        ${item.weekdays.map(day => `
-                                            <li class="weekday-item">${day.weekday} ${day.time !== '-' ? `(${day.time})` : ''}</li>
-                                        `).join('')}
-                                    </ul>
-                                </td>
+                                <th>No.</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Time Interval</th>
+                                <th>Weekdays</th>
                             </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            ${finalData.map(item => `
+                                <tr>
+                                    <td>${item.sno}</td>
+                                    <td>${item.type}</td>
+                                    <td>${item.description}</td>
+                                    <td>${item.timeInterval}</td>
+                                    <td>
+                                        <ul class="weekday-list">
+                                            ${item.weekdays.map(day => `
+                                                <li class="weekday-item">${day.weekday} ${day.time !== '-' ? `(${day.time})` : ''}</li>
+                                            `).join('')}
+                                        </ul>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
             </body>
             </html>
         `;
@@ -943,8 +1002,278 @@ router.post("/combine-image", async (req, res) => {
         res.status(500).json({ error: "Failed to generate image" });
     }
 });
+// Add these new endpoints after your existing /combine-image endpoint
 
+router.post("/getDrikTable-image", async (req, res) => {
+    const { city, date, goodTimingsOnly } = req.body;
 
+    if (!city || !date) {
+        return res.status(400).json({ error: "Invalid input data" });
+    }
+
+    try {
+        // Fetch the table data
+        const tableData = await createDrikTable(city, date);
+       if (!tableData || tableData.length === 0) {
+            throw new Error('No table data available');
+        }
+
+        const finalData = goodTimingsOnly ? tableData.filter(row => row.category === 'Good') : tableData;
+
+        // Generate HTML content
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body {
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        padding: 40px;
+                        background: #f8f9fa;
+                        color: #333;
+                        line-height: 1.6;
+                    }
+                    .container {
+                        max-width: 1200px;
+                        margin: 0 auto;
+                        background: #ffffff;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        padding: 30px;
+                    }
+                    .header {
+                        text-align: center;
+                        margin-bottom: 30px;
+                        padding-bottom: 20px;
+                        border-bottom: 2px solid #e9ecef;
+                    }
+                    .header h2 {
+                        color: #2c3e50;
+                        font-size: 28px;
+                        margin-bottom: 10px;
+                    }
+                    .header h3 {
+                        color: #6c757d;
+                        font-size: 20px;
+                        font-weight: normal;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: separate;
+                        border-spacing: 0;
+                        margin-bottom: 30px;
+                        border-radius: 6px;
+                        overflow: hidden;
+                    }
+                    th, td {
+                        border: 1px solid #dee2e6;
+                        padding: 15px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #4a90e2;
+                        color: white;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                        font-size: 14px;
+                        letter-spacing: 0.5px;
+                    }
+                    tr:nth-child(even) {
+                        background-color: #f8f9fa;
+                    }
+                    tr:hover {
+                        background-color: #f2f4f6;
+                    }
+                    .good-timing {
+                        color: #28a745;
+                        font-weight: 600;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h2>Drik Panchang Muhurat Table</h2>
+                        <h3>${city} - ${date}</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Muhurat</th>
+                                <th>Category</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${finalData.map(item => `
+                                <tr>
+                                    <td>${item.muhurat}</td>
+                                    <td>${item.category}</td>
+                                    <td class="${item.category === 'Good' ? 'good-timing' : ''}">${item.time}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </body>
+            </html>
+        `;
+
+        // Launch puppeteer and generate image
+        const browser = await puppeteer.launch({
+            headless: 'new',
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+        const page = await browser.newPage();
+        await page.setContent(htmlContent);
+        await page.setViewport({ width: 1200, height: 800 });
+
+        // Wait for content to load
+        await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 1000)));
+
+        // Take screenshot
+        const screenshot = await page.screenshot({
+            fullPage: true,
+            type: 'png',
+            encoding: 'binary'
+        });
+
+        await browser.close();
+
+        // Send response
+        res.setHeader('Content-Type', 'image/png');
+        res.setHeader('Content-Disposition', `attachment; filename=drik-table-${city}-${date}.png`);
+        res.send(screenshot);
+
+    } catch (error) {
+        console.error("Error generating image:", error);
+        res.status(500).json({ error: "Failed to generate image" });
+    }
+});
+router.post("/getBharagvTable-image", async (req, res) => {
+    const { city, date, showNonBlue, is12HourFormat } = req.body;
+
+    if (!city || !date) {
+        return res.status(400).send('City and date are required');
+    }
+    if (showNonBlue === undefined || is12HourFormat === undefined) {
+        return res.status(400).send('showNonBlue and is12HourFormat are required');
+    }
+    try {
+        
+        const table = await createBharagvTable(city, date, showNonBlue === 'true', is12HourFormat === 'true');
+        
+        // Generate HTML content
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        padding: 40px;
+                        background: #f8f9fa;
+                    }
+                    .container {
+                        max-width: 1200px;
+                        margin: 0 auto;
+                        background: #ffffff;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        padding: 30px;
+                    }
+                    .header {
+                        text-align: center;
+                        margin-bottom: 30px;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: separate;
+                        border-spacing: 0;
+                        margin-bottom: 30px;
+                    }
+                    th, td {
+                        border: 1px solid #dee2e6;
+                        padding: 12px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #4a90e2;
+                        color: white;
+                    }
+                    .colored-row {
+                        background-color: #e3f2fd;
+                    }
+                    .time-interval {
+                        font-family: monospace;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h2>Bhargava Panchangam Table</h2>
+                        <h3>${city} - ${date}</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Time Interval</th>
+                                <th>Weekday</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${table.map(item => `
+                                <tr class="${item.isColored || item.isWednesdayColored ? 'colored-row' : ''}">
+                                    <td>${item.sNo || ''}</td>
+                                    <td class="time-interval">${item.timeInterval1 || ''}</td>
+                                    <td>${item.weekday || '-'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </body>
+            </html>
+        `;
+        
+
+         const browser = await puppeteer.launch({
+            headless: 'new',
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+
+        const page = await browser.newPage();
+        await page.setContent(htmlContent);
+        await page.setViewport({ width: 1200, height: 800 });
+        
+        // Replace waitForTimeout with evaluate
+        await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 1000)));
+        await page.evaluateHandle('document.fonts.ready');
+
+        const screenshot = await page.screenshot({
+            fullPage: true,
+            type: 'png',
+            encoding: 'binary'
+        });
+
+        await browser.close();
+
+        // Send response
+        res.setHeader('Content-Type', 'image/png');
+        res.setHeader('Content-Disposition', `attachment; filename=bhargav-table-${city}-${date}.png`);
+        res.send(screenshot);
+
+    } catch (error) {
+        console.error("Error generating image:", error);
+        res.status(500).json({ 
+            error: "Failed to generate image",
+            details: error.message 
+        });
+    }
+});
 
 
 

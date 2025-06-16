@@ -30,7 +30,9 @@ import PachangamForm from './pages/PachangamForm';
 import PanchakaMuhurth from './pages/PanchakaMuhurth';
 import Combine from './pages/Combine';
 import Navbar from './components/Navbar';
-
+import DownloadImage from './pages/DownloadImage';
+import DrikTableImage from './pages/DrikTableImage';
+import BhargavTableImage from './pages/BhargavTableImage';
 
 function App() {
   return (
@@ -40,6 +42,9 @@ function App() {
       <Route path="/" element={<PachangamForm />} />
         <Route path="/panchaka" element={<PanchakaMuhurth />} />
         <Route path="/combine" element={<Combine />} />
+        <Route path="/DownloadImage" element={<DownloadImage />} />
+        <Route path="/drik-table-image" element={<DrikTableImage />} />
+        <Route path="/bhargav-table-image" element={<BhargavTableImage />} />
         {/* Add more routes here if needed */}
       </Routes>
     </BrowserRouter>
