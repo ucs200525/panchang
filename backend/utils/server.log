@@ -9883,3 +9883,69 @@
 2025-06-17T04:40:11.895Z [WARN]: weekday     Monday
 2025-06-17T04:40:11.896Z [WARN]: input     Monday
 2025-06-17T04:40:11.898Z [WARN]: closestDay     Monday
+2025-06-17T04:40:49.269Z [INFO]: Server is running on port 4000
+2025-06-17T04:41:08.711Z [WARN]: weekday     Tuesday
+2025-06-17T04:41:08.712Z [WARN]: input     Tuesday
+2025-06-17T04:41:08.715Z [WARN]: closestDay     Tuesday
+2025-06-17T04:41:16.534Z [INFO]: limit, remaining, reset:250024751750204800
+2025-06-17T04:41:16.553Z [ERROR]: get sun times: Recherla
+2025-06-17T04:41:16.555Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T04:41:17.047Z [INFO]: limit , remaining , reset :250024741750204800
+2025-06-17T04:41:17.051Z [ERROR]: get lang lat time : 17.1085436 81.0126846 Asia/Kolkata
+2025-06-17T04:41:17.053Z [ERROR]: get sun times3: [object Object]
+2025-06-17T04:41:18.217Z [INFO]: Sunrise and Sunset for today: 05:31:15, 18:42:33
+2025-06-17T04:41:18.518Z [INFO]: Sunrise for tomorrow: 05:31:26
+2025-06-17T04:41:18.529Z [WARN]: dateString     2025-06-17
+2025-06-17T04:41:18.564Z [WARN]: weekday     Tuesday
+2025-06-17T04:41:18.566Z [WARN]: input     Tuesday
+2025-06-17T04:41:18.568Z [WARN]: closestDay     Tuesday
+2025-06-17T04:41:43.953Z [ERROR]: get sun times: Recherla
+2025-06-17T04:41:43.955Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T04:41:45.486Z [INFO]: limit , remaining , reset :250024731750204800
+2025-06-17T04:41:45.489Z [ERROR]: get lang lat time : 17.1085436 81.0126846 Asia/Kolkata
+2025-06-17T04:41:45.490Z [ERROR]: get sun times3: [object Object]
+2025-06-17T04:41:46.507Z [INFO]: Sunrise and Sunset for today: 05:31:15, 18:42:33
+2025-06-17T04:41:46.813Z [INFO]: Sunrise for tomorrow: 05:31:26
+2025-06-17T04:41:46.816Z [WARN]: dateString     2025-06-17
+2025-06-17T04:41:46.820Z [WARN]: weekday     Tuesday
+2025-06-17T04:41:46.821Z [WARN]: input     Tuesday
+2025-06-17T04:41:46.823Z [WARN]: closestDay     Tuesday
+2025-06-17T04:42:32.688Z [INFO]: limit, remaining, reset:250024721750204800
+2025-06-17T04:42:33.736Z [INFO]: GeoName ID:1274133
+2025-06-17T04:43:11.598Z [INFO]: limit, remaining, reset:250024711750204800
+2025-06-17T04:43:11.626Z [ERROR]: get sun times: Chintalapudi
+2025-06-17T04:43:11.629Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T04:43:12.110Z [INFO]: GeoName ID:1274133
+2025-06-17T04:43:12.130Z [INFO]: limit , remaining , reset :250024701750204800
+2025-06-17T04:43:12.132Z [ERROR]: get lang lat time : 17.0976285 80.9637011 Asia/Kolkata
+2025-06-17T04:43:12.133Z [ERROR]: get sun times3: [object Object]
+2025-06-17T04:43:13.132Z [INFO]: Sunrise and Sunset for today: 05:31:28, 18:42:43
+2025-06-17T04:43:13.543Z [INFO]: Sunrise for tomorrow: 05:31:39
+2025-06-17T04:43:13.545Z [WARN]: dateString     2025-06-17
+2025-06-17T04:43:13.547Z [WARN]: weekday     Tuesday
+2025-06-17T04:43:13.548Z [WARN]: input     Tuesday
+2025-06-17T04:43:13.549Z [WARN]: closestDay     Tuesday
+2025-06-17T04:43:15.488Z [INFO]: GeoName ID:10788726
+2025-06-17T04:43:15.853Z [ERROR]: get sun times: Recherla
+2025-06-17T04:43:15.865Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T04:43:16.309Z [INFO]: limit , remaining , reset :250024691750204800
+2025-06-17T04:43:16.310Z [ERROR]: get lang lat time : 17.1085436 81.0126846 Asia/Kolkata
+2025-06-17T04:43:16.310Z [ERROR]: get sun times3: [object Object]
+2025-06-17T04:43:16.616Z [INFO]: Sunrise and Sunset for today: 05:31:15, 18:42:33
+2025-06-17T04:43:16.922Z [INFO]: Sunrise for tomorrow: 05:31:26
+2025-06-17T04:43:16.923Z [WARN]: dateString     2025-06-17
+2025-06-17T04:43:16.925Z [WARN]: weekday     Tuesday
+2025-06-17T04:43:16.925Z [WARN]: input     Tuesday
+2025-06-17T04:43:16.926Z [WARN]: closestDay     Tuesday
+2025-06-17T04:44:18.671Z [INFO]: GeoName ID:1274133
+2025-06-17T04:44:19.285Z [ERROR]: get sun times: Chintalapudi
+2025-06-17T04:44:19.286Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T04:44:20.825Z [INFO]: limit , remaining , reset :250024681750204800
+2025-06-17T04:44:20.827Z [ERROR]: get lang lat time : 17.0976285 80.9637011 Asia/Kolkata
+2025-06-17T04:44:20.828Z [ERROR]: get sun times3: [object Object]
+2025-06-17T04:44:21.939Z [INFO]: Sunrise and Sunset for today: 05:31:28, 18:42:43
+2025-06-17T04:44:22.262Z [INFO]: Sunrise for tomorrow: 05:31:39
+2025-06-17T04:44:22.264Z [WARN]: dateString     2025-06-17
+2025-06-17T04:44:22.266Z [WARN]: weekday     Tuesday
+2025-06-17T04:44:22.266Z [WARN]: input     Tuesday
+2025-06-17T04:44:22.267Z [WARN]: closestDay     Tuesday

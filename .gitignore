@@ -5,8 +5,10 @@
 /backend/node_modules
 /frontend/node_modules
 /again-js/node_modules
+/backend/utils/server.log
 /.pnp
 .pnp.js
+
 
 # testing
 /coverage
