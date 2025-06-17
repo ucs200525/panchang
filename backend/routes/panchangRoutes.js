@@ -1164,7 +1164,7 @@ router.post("/getBharagvTable-image", async (req, res) => {
     }
     try {
         
-        const table = await createBharagvTable(city, date, showNonBlue === 'true', is12HourFormat === 'true');
+        const table = await createBharagvTable(city, date, showNonBlue === 'true', is12HourFormat);
         
         // Generate HTML content
         const htmlContent = `

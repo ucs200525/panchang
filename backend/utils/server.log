@@ -9949,3 +9949,113 @@
 2025-06-17T04:44:22.266Z [WARN]: weekday     Tuesday
 2025-06-17T04:44:22.266Z [WARN]: input     Tuesday
 2025-06-17T04:44:22.267Z [WARN]: closestDay     Tuesday
+2025-06-17T12:45:05.380Z [INFO]: Server is running on port 4000
+2025-06-17T12:45:17.299Z [ERROR]: get sun times: Vijayawada
+2025-06-17T12:45:17.300Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T12:45:17.888Z [INFO]: limit , remaining , reset :250024541750204800
+2025-06-17T12:45:17.888Z [ERROR]: get lang lat time : 16.5115306 80.6160469 Asia/Kolkata
+2025-06-17T12:45:17.889Z [ERROR]: get sun times3: [object Object]
+2025-06-17T12:45:18.871Z [INFO]: Sunrise and Sunset for today: 05:34:00, 18:42:59
+2025-06-17T12:45:19.109Z [INFO]: Sunrise for tomorrow: 05:34:11
+2025-06-17T12:45:19.110Z [WARN]: dateString     2025-06-17
+2025-06-17T12:45:19.111Z [WARN]: weekday     Tuesday
+2025-06-17T12:45:19.111Z [WARN]: input     Tuesday
+2025-06-17T12:45:19.111Z [WARN]: closestDay     Tuesday
+2025-06-17T12:45:39.511Z [INFO]: GeoName ID:1253184
+2025-06-17T12:45:47.569Z [WARN]: weekday     Tuesday
+2025-06-17T12:45:47.569Z [WARN]: input     Tuesday
+2025-06-17T12:45:47.570Z [WARN]: closestDay     Tuesday
+2025-06-17T12:45:54.112Z [INFO]: limit, remaining, reset:250024531750204800
+2025-06-17T12:45:54.122Z [ERROR]: get sun times: Vijayawada
+2025-06-17T12:45:54.123Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T12:45:54.343Z [INFO]: limit , remaining , reset :250024521750204800
+2025-06-17T12:45:54.344Z [ERROR]: get lang lat time : 16.5115306 80.6160469 Asia/Kolkata
+2025-06-17T12:45:54.344Z [ERROR]: get sun times3: [object Object]
+2025-06-17T12:45:55.070Z [INFO]: Sunrise and Sunset for today: 05:34:00, 18:42:59
+2025-06-17T12:45:55.316Z [INFO]: Sunrise for tomorrow: 05:34:11
+2025-06-17T12:45:55.325Z [WARN]: dateString     2025-06-17
+2025-06-17T12:45:55.349Z [WARN]: weekday     Tuesday
+2025-06-17T12:45:55.349Z [WARN]: input     Tuesday
+2025-06-17T12:45:55.349Z [WARN]: closestDay     Tuesday
+2025-06-17T12:46:13.101Z [INFO]: limit, remaining, reset:250024511750204800
+2025-06-17T12:46:13.462Z [INFO]: GeoName ID:1253184
+2025-06-17T12:47:15.267Z [INFO]: GeoName ID:1253184
+2025-06-17T12:56:47.402Z [INFO]: GeoName ID:1253184
+2025-06-17T13:20:49.063Z [WARN]: weekday     Tuesday
+2025-06-17T13:20:49.063Z [WARN]: input     Tuesday
+2025-06-17T13:20:49.063Z [WARN]: closestDay     Tuesday
+2025-06-17T13:20:56.151Z [WARN]: weekday     Tuesday
+2025-06-17T13:20:56.152Z [WARN]: input     Tuesday
+2025-06-17T13:20:56.152Z [WARN]: closestDay     Tuesday
+2025-06-17T13:22:04.574Z [ERROR]: get sun times: Vijayawada
+2025-06-17T13:22:04.574Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T13:22:05.284Z [INFO]: limit , remaining , reset :250024501750204800
+2025-06-17T13:22:05.285Z [ERROR]: get lang lat time : 16.5115306 80.6160469 Asia/Kolkata
+2025-06-17T13:22:05.285Z [ERROR]: get sun times3: [object Object]
+2025-06-17T13:22:06.765Z [INFO]: Sunrise and Sunset for today: 05:34:00, 18:42:59
+2025-06-17T13:22:07.142Z [INFO]: Sunrise for tomorrow: 05:34:11
+2025-06-17T13:22:07.144Z [WARN]: dateString     2025-06-17
+2025-06-17T13:22:07.145Z [WARN]: weekday     Tuesday
+2025-06-17T13:22:07.145Z [WARN]: input     Tuesday
+2025-06-17T13:22:07.145Z [WARN]: closestDay     Tuesday
+2025-06-17T13:24:45.055Z [INFO]: Server is running on port 4000
+2025-06-17T13:24:55.495Z [INFO]: GeoName ID:1253184
+2025-06-17T13:24:55.797Z [ERROR]: get sun times: Vijayawada
+2025-06-17T13:24:55.798Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T13:24:56.589Z [INFO]: limit , remaining , reset :250024491750204800
+2025-06-17T13:24:56.590Z [ERROR]: get lang lat time : 16.5115306 80.6160469 Asia/Kolkata
+2025-06-17T13:24:56.590Z [ERROR]: get sun times3: [object Object]
+2025-06-17T13:24:57.789Z [INFO]: Sunrise and Sunset for today: 05:34:00, 18:42:59
+2025-06-17T13:24:58.083Z [INFO]: Sunrise for tomorrow: 05:34:11
+2025-06-17T13:24:58.084Z [WARN]: dateString     2025-06-17
+2025-06-17T13:24:58.086Z [WARN]: weekday     Tuesday
+2025-06-17T13:24:58.086Z [WARN]: input     Tuesday
+2025-06-17T13:24:58.087Z [WARN]: closestDay     Tuesday
+2025-06-17T13:25:12.209Z [INFO]: limit, remaining, reset:250024481750204800
+2025-06-17T13:25:12.218Z [ERROR]: get sun times: Vijayawada
+2025-06-17T13:25:12.219Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T13:25:12.691Z [INFO]: limit , remaining , reset :250024471750204800
+2025-06-17T13:25:12.691Z [ERROR]: get lang lat time : 16.5115306 80.6160469 Asia/Kolkata
+2025-06-17T13:25:12.691Z [ERROR]: get sun times3: [object Object]
+2025-06-17T13:25:12.702Z [INFO]: GeoName ID:1253184
+2025-06-17T13:25:13.879Z [INFO]: Sunrise and Sunset for today: 05:34:00, 18:42:59
+2025-06-17T13:25:14.252Z [INFO]: Sunrise for tomorrow: 05:34:11
+2025-06-17T13:25:14.253Z [WARN]: dateString     2025-06-17
+2025-06-17T13:25:14.253Z [WARN]: weekday     Tuesday
+2025-06-17T13:25:14.253Z [WARN]: input     Tuesday
+2025-06-17T13:25:14.254Z [WARN]: closestDay     Tuesday
+2025-06-17T13:26:56.833Z [INFO]: GeoName ID:1253184
+2025-06-17T13:26:57.107Z [ERROR]: get sun times: Vijayawada
+2025-06-17T13:26:57.108Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T13:26:57.668Z [INFO]: limit , remaining , reset :250024461750204800
+2025-06-17T13:26:57.668Z [ERROR]: get lang lat time : 16.5115306 80.6160469 Asia/Kolkata
+2025-06-17T13:26:57.669Z [ERROR]: get sun times3: [object Object]
+2025-06-17T13:26:58.580Z [INFO]: Sunrise and Sunset for today: 05:34:00, 18:42:59
+2025-06-17T13:26:58.894Z [INFO]: Sunrise for tomorrow: 05:34:11
+2025-06-17T13:26:58.895Z [WARN]: dateString     2025-06-17
+2025-06-17T13:26:58.896Z [WARN]: weekday     Tuesday
+2025-06-17T13:26:58.896Z [WARN]: input     Tuesday
+2025-06-17T13:26:58.896Z [WARN]: closestDay     Tuesday
+2025-06-17T13:28:29.336Z [ERROR]: get sun times: Vijayawada
+2025-06-17T13:28:29.339Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T13:28:30.080Z [INFO]: limit , remaining , reset :250024451750204800
+2025-06-17T13:28:30.080Z [ERROR]: get lang lat time : 16.5115306 80.6160469 Asia/Kolkata
+2025-06-17T13:28:30.083Z [ERROR]: get sun times3: [object Object]
+2025-06-17T13:28:31.007Z [INFO]: Sunrise and Sunset for today: 05:34:00, 18:42:59
+2025-06-17T13:28:31.307Z [INFO]: Sunrise for tomorrow: 05:34:11
+2025-06-17T13:28:31.307Z [WARN]: dateString     2025-06-17
+2025-06-17T13:28:31.307Z [WARN]: weekday     Tuesday
+2025-06-17T13:28:31.307Z [WARN]: input     Tuesday
+2025-06-17T13:28:31.308Z [WARN]: closestDay     Tuesday
+2025-06-17T13:29:43.563Z [INFO]: Server is running on port 4000
+2025-06-17T13:29:54.813Z [ERROR]: get sun times: Vijayawada
+2025-06-17T13:29:54.813Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T13:29:55.553Z [INFO]: limit , remaining , reset :250024441750204800
+2025-06-17T13:29:55.554Z [ERROR]: get lang lat time : 16.5115306 80.6160469 Asia/Kolkata
+2025-06-17T13:29:55.554Z [ERROR]: get sun times3: [object Object]
+2025-06-17T13:29:56.806Z [INFO]: Sunrise and Sunset for today: 05:34:00, 18:42:59
+2025-06-17T13:29:57.086Z [INFO]: Sunrise for tomorrow: 05:34:11
+2025-06-17T13:29:57.087Z [WARN]: dateString     2025-06-17
+2025-06-17T13:29:57.090Z [WARN]: weekday     Tuesday
+2025-06-17T13:29:57.090Z [WARN]: input     Tuesday
+2025-06-17T13:29:57.091Z [WARN]: closestDay     Tuesday
