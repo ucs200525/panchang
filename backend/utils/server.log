@@ -9601,3 +9601,90 @@
 2025-06-16T08:26:23.077Z [WARN]: weekday     Monday
 2025-06-16T08:26:23.078Z [WARN]: input     Monday
 2025-06-16T08:26:23.079Z [WARN]: closestDay     Monday
+2025-06-17T01:30:51.483Z [INFO]: Server is running on port 4000
+2025-06-17T01:31:23.845Z [WARN]: weekday     
+2025-06-17T01:31:23.848Z [WARN]: input     
+2025-06-17T01:31:23.850Z [WARN]: closestDay     Monday
+2025-06-17T01:35:57.895Z [ERROR]: get sun times: Vijayawada
+2025-06-17T01:35:57.897Z [ERROR]: get sun times2: 2025-06-17
+2025-06-17T01:35:58.844Z [INFO]: limit , remaining , reset :250024991750204800
+2025-06-17T01:35:58.845Z [ERROR]: get lang lat time : 16.5115306 80.6160469 Asia/Kolkata
+2025-06-17T01:35:58.845Z [ERROR]: get sun times3: [object Object]
+2025-06-17T01:36:00.000Z [INFO]: Sunrise and Sunset for today: 05:34:00, 18:42:59
+2025-06-17T01:36:00.274Z [INFO]: Sunrise for tomorrow: 05:34:11
+2025-06-17T01:36:00.275Z [WARN]: dateString     2025-06-17
+2025-06-17T01:36:00.278Z [WARN]: weekday     Tuesday
+2025-06-17T01:36:00.279Z [WARN]: input     Tuesday
+2025-06-17T01:36:00.280Z [WARN]: closestDay     Tuesday
+2025-06-17T01:42:11.431Z [INFO]: Server is running on port 4000
+2025-06-17T01:42:21.559Z [ERROR]: get sun times: Tadepalligudem
+2025-06-17T01:42:21.560Z [ERROR]: get sun times2: 2025-06-16
+2025-06-17T01:42:22.416Z [INFO]: limit , remaining , reset :250024981750204800
+2025-06-17T01:42:22.417Z [ERROR]: get lang lat time : 16.8102437 81.526592 Asia/Kolkata
+2025-06-17T01:42:22.418Z [ERROR]: get sun times3: [object Object]
+2025-06-17T01:42:23.564Z [INFO]: Sunrise and Sunset for today: 05:29:36, 18:39:39
+2025-06-17T01:42:23.838Z [INFO]: Sunrise for tomorrow: 05:29:47
+2025-06-17T01:42:23.839Z [WARN]: dateString     2025-06-16
+2025-06-17T01:42:23.842Z [WARN]: weekday     Monday
+2025-06-17T01:42:23.843Z [WARN]: input     Monday
+2025-06-17T01:42:23.844Z [WARN]: closestDay     Monday
+2025-06-17T01:45:28.075Z [INFO]: Server is running on port 4000
+2025-06-17T01:45:35.791Z [ERROR]: get sun times: Tadepalligudem
+2025-06-17T01:45:35.792Z [ERROR]: get sun times2: 2025-06-16
+2025-06-17T01:45:36.875Z [INFO]: limit , remaining , reset :250024971750204800
+2025-06-17T01:45:36.876Z [ERROR]: get lang lat time : 16.8102437 81.526592 Asia/Kolkata
+2025-06-17T01:45:36.878Z [ERROR]: get sun times3: [object Object]
+2025-06-17T01:45:38.236Z [INFO]: Sunrise and Sunset for today: 05:29:36, 18:39:39
+2025-06-17T01:45:38.608Z [INFO]: Sunrise for tomorrow: 05:29:47
+2025-06-17T01:45:38.611Z [WARN]: dateString     2025-06-16
+2025-06-17T01:45:38.616Z [WARN]: weekday     Monday
+2025-06-17T01:45:38.617Z [WARN]: input     Monday
+2025-06-17T01:45:38.619Z [WARN]: closestDay     Monday
+2025-06-17T01:49:08.704Z [INFO]: Server is running on port 4000
+2025-06-17T01:49:14.798Z [ERROR]: get sun times: Tadepalligudem
+2025-06-17T01:49:14.799Z [ERROR]: get sun times2: 2025-06-16
+2025-06-17T01:49:15.803Z [INFO]: limit , remaining , reset :250024961750204800
+2025-06-17T01:49:15.804Z [ERROR]: get lang lat time : 16.8102437 81.526592 Asia/Kolkata
+2025-06-17T01:49:15.805Z [ERROR]: get sun times3: [object Object]
+2025-06-17T01:49:17.164Z [INFO]: Sunrise and Sunset for today: 05:29:36, 18:39:39
+2025-06-17T01:49:17.539Z [INFO]: Sunrise for tomorrow: 05:29:47
+2025-06-17T01:49:17.540Z [WARN]: dateString     2025-06-16
+2025-06-17T01:49:17.543Z [WARN]: weekday     Monday
+2025-06-17T01:49:17.544Z [WARN]: input     Monday
+2025-06-17T01:49:17.546Z [WARN]: closestDay     Monday
+2025-06-17T01:51:38.728Z [INFO]: Server is running on port 4000
+2025-06-17T01:51:45.424Z [ERROR]: get sun times: Tadepalligudem
+2025-06-17T01:51:45.425Z [ERROR]: get sun times2: 2025-06-16
+2025-06-17T01:51:46.839Z [INFO]: limit , remaining , reset :250024951750204800
+2025-06-17T01:51:46.840Z [ERROR]: get lang lat time : 16.8102437 81.526592 Asia/Kolkata
+2025-06-17T01:51:46.840Z [ERROR]: get sun times3: [object Object]
+2025-06-17T01:51:48.090Z [INFO]: Sunrise and Sunset for today: 05:29:36, 18:39:39
+2025-06-17T01:51:48.468Z [INFO]: Sunrise for tomorrow: 05:29:47
+2025-06-17T01:51:48.469Z [WARN]: dateString     2025-06-16
+2025-06-17T01:51:48.473Z [WARN]: weekday     Monday
+2025-06-17T01:51:48.474Z [WARN]: input     Monday
+2025-06-17T01:51:48.475Z [WARN]: closestDay     Monday
+2025-06-17T01:52:55.030Z [INFO]: Server is running on port 4000
+2025-06-17T01:53:00.951Z [ERROR]: get sun times: Tadepalligudem
+2025-06-17T01:53:00.952Z [ERROR]: get sun times2: 2025-06-16
+2025-06-17T01:53:02.410Z [INFO]: limit , remaining , reset :250024941750204800
+2025-06-17T01:53:02.410Z [ERROR]: get lang lat time : 16.8102437 81.526592 Asia/Kolkata
+2025-06-17T01:53:02.411Z [ERROR]: get sun times3: [object Object]
+2025-06-17T01:53:03.755Z [INFO]: Sunrise and Sunset for today: 05:29:36, 18:39:39
+2025-06-17T01:53:04.041Z [INFO]: Sunrise for tomorrow: 05:29:47
+2025-06-17T01:53:04.042Z [WARN]: dateString     2025-06-16
+2025-06-17T01:53:04.045Z [WARN]: weekday     Monday
+2025-06-17T01:53:04.046Z [WARN]: input     Monday
+2025-06-17T01:53:04.047Z [WARN]: closestDay     Monday
+2025-06-17T01:53:27.979Z [INFO]: Server is running on port 4000
+2025-06-17T01:53:40.109Z [ERROR]: get sun times: Tadepalligudem
+2025-06-17T01:53:40.111Z [ERROR]: get sun times2: 2025-06-16
+2025-06-17T01:53:42.144Z [INFO]: limit , remaining , reset :250024931750204800
+2025-06-17T01:53:42.146Z [ERROR]: get lang lat time : 16.8102437 81.526592 Asia/Kolkata
+2025-06-17T01:53:42.146Z [ERROR]: get sun times3: [object Object]
+2025-06-17T01:53:43.406Z [INFO]: Sunrise and Sunset for today: 05:29:36, 18:39:39
+2025-06-17T01:53:43.772Z [INFO]: Sunrise for tomorrow: 05:29:47
+2025-06-17T01:53:43.774Z [WARN]: dateString     2025-06-16
+2025-06-17T01:53:43.777Z [WARN]: weekday     Monday
+2025-06-17T01:53:43.778Z [WARN]: input     Monday
+2025-06-17T01:53:43.779Z [WARN]: closestDay     Monday

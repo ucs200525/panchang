@@ -1171,42 +1171,70 @@ router.post("/getBharagvTable-image", async (req, res) => {
                 <meta charset="UTF-8">
                 <style>
                     body {
-                        font-family: Arial, sans-serif;
+                        font-family: 'Segoe UI', Arial, sans-serif;
                         padding: 40px;
                         background: #f8f9fa;
+                        font-size: 22px;
+                        color: #222;
                     }
                     .container {
-                        max-width: 1200px;
+                        max-width: 1400px;
                         margin: 0 auto;
-                        background: #ffffff;
-                        border-radius: 8px;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                        padding: 30px;
+                        background: #fff;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.13);
+                        padding: 40px 30px;
                     }
                     .header {
                         text-align: center;
-                        margin-bottom: 30px;
+                        margin-bottom: 36px;
+                    }
+                    .header h2 {
+                        font-size: 2.2em;
+                        margin-bottom: 0.2em;
+                        color: #2c3e50;
+                    }
+                    .header h3 {
+                        font-size: 1.3em;
+                        color: #4a90e2;
+                        font-weight: 400;
                     }
                     table {
                         width: 100%;
-                        border-collapse: separate;
-                        border-spacing: 0;
+                        border-collapse: collapse;
                         margin-bottom: 30px;
+                        font-size: 1.15em;
+                        background: #fdfdfd;
                     }
                     th, td {
-                        border: 1px solid #dee2e6;
-                        padding: 12px;
+                        border: 2px solid #4a90e2;
+                        padding: 18px 12px;
                         text-align: left;
+                        vertical-align: middle;
                     }
                     th {
                         background-color: #4a90e2;
-                        color: white;
+                        color: #fff;
+                        font-size: 1.1em;
+                        letter-spacing: 0.5px;
+                        border-bottom: 4px solid #357abd;
                     }
-                    .colored-row {
+                    tr {
+                        transition: background 0.2s;
+                    }
+                    tr:nth-child(even) {
+                        background-color: #f0f7ff;
+                    }
+                    tr:hover {
                         background-color: #e3f2fd;
                     }
+                    .colored-row {
+                        background-color: #d0eaff !important;
+                    }
                     .time-interval {
-                        font-family: monospace;
+                        font-family: 'Fira Mono', 'Consolas', monospace;
+                        font-size: 1.08em;
+                        color: #0056b3;
                     }
                 </style>
             </head>
@@ -1224,32 +1252,37 @@ router.post("/getBharagvTable-image", async (req, res) => {
                                 <th>Weekday</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            ${table.map(item => `
-                                <tr class="${item.isColored || item.isWednesdayColored ? 'colored-row' : ''}">
-                                    <td>${item.sNo || ''}</td>
-                                    <td class="time-interval">${item.timeInterval1 || ''}</td>
-                                    <td>${item.weekday || '-'}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
+
+<tbody>
+    ${table.map(item => `
+        <tr class="${item.isColored || item.isWednesdayColored ? 'colored-row' : ''}">
+            <td>${item.sNo || ''}</td>
+            <td class="time-interval">
+                ${item.start1 || ''} to ${item.end1 || ''}
+            </td>
+            <td>${item.weekday || '-'}</td>
+
+        </tr>
+    `).join('')}
+</tbody>
                     </table>
                 </div>
             </body>
             </html>
         `;
-        
 
-         const browser = await puppeteer.launch({
+        // Increase viewport height for clarity (e.g., 1200px per 30 rows)
+        const browser = await puppeteer.launch({
             headless: 'new',
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
         const page = await browser.newPage();
         await page.setContent(htmlContent);
-        await page.setViewport({ width: 1200, height: 800 });
-        
-        // Replace waitForTimeout with evaluate
+        // Dynamically set height based on row count for clarity
+        const rowCount = table.length > 0 ? table.length : 30;
+        await page.setViewport({ width: 1400, height: 80 * rowCount });
+
         await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 1000)));
         await page.evaluateHandle('document.fonts.ready');
 
