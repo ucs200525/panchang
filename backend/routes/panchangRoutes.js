@@ -1150,6 +1150,9 @@ router.post("/getDrikTable-image", async (req, res) => {
         res.status(500).json({ error: "Failed to generate image" });
     }
 });
+
+
+  
 router.post("/getBharagvTable-image", async (req, res) => {
     const { city, date, showNonBlue, is12HourFormat } = req.body;
 
@@ -1177,15 +1180,18 @@ router.post("/getBharagvTable-image", async (req, res) => {
                         font-size: 22px;
                         color: #222;
                     }
-                    .container {
-                        max-width: 1400px;
-                        margin: 0 auto;
-                        background: #fff;
-                        border-radius: 12px;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.13);
-                        padding: 40px 30px;
-                    }
-                    .header {
+                // In your style section, update these values:
+                .container {
+                    max-width: 1400px;
+                    margin: 0 auto;
+                    background: #fff;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.13);
+                    padding: 20px 30px;  // Reduced from 40px
+                }
+
+
+                .header {
                         text-align: center;
                         margin-bottom: 36px;
                     }
@@ -1206,9 +1212,10 @@ router.post("/getBharagvTable-image", async (req, res) => {
                         font-size: 1.15em;
                         background: #fdfdfd;
                     }
+
                     th, td {
                         border: 2px solid #4a90e2;
-                        padding: 18px 12px;
+                        padding: 12px 8px;   // Reduced from 18px
                         text-align: left;
                         vertical-align: middle;
                     }
@@ -1250,28 +1257,30 @@ router.post("/getBharagvTable-image", async (req, res) => {
                                 <th>No.</th>
                                 <th>Time Interval</th>
                                 <th>Weekday</th>
+                                <th>Time Interval</th>
                             </tr>
                         </thead>
 
-<tbody>
-    ${table.map(item => `
-        <tr class="${item.isColored || item.isWednesdayColored ? 'colored-row' : ''}">
-            <td>${item.sNo || ''}</td>
-            <td class="time-interval">
-                ${item.start1 || ''} to ${item.end1 || ''}
-            </td>
-            <td>${item.weekday || '-'}</td>
-
-        </tr>
-    `).join('')}
-</tbody>
+                        <tbody>
+                            ${table.slice(0, 30).map(item => `
+                                <tr class="${item.isColored || item.isWednesdayColored ? 'colored-row' : ''}">
+                                    <td>${item.sNo || ''}</td>
+                                    <td class="time-interval">
+                                        ${item.start1 || ''} to ${item.end1 || ''}
+                                    </td>
+                                    <td>${item.weekday || '-'}</td>
+                                    <td class="time-interval">
+                                        ${item.start2 || ''} to ${item.end2 || ''}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
                     </table>
                 </div>
             </body>
             </html>
         `;
 
-        // Increase viewport height for clarity (e.g., 1200px per 30 rows)
         const browser = await puppeteer.launch({
             headless: 'new',
             args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -1279,17 +1288,30 @@ router.post("/getBharagvTable-image", async (req, res) => {
 
         const page = await browser.newPage();
         await page.setContent(htmlContent);
-        // Dynamically set height based on row count for clarity
-        const rowCount = table.length > 0 ? table.length : 30;
-        await page.setViewport({ width: 1400, height: 80 * rowCount });
 
+        // Calculate optimal viewport height for 30 rows
+        const rowCount = Math.min(table.length, 38); // Limit to max 30 rows
+        await page.setViewport({ 
+            width: 1400,
+            height: 50 * rowCount + 250, // 50px per row + extra space for header/margins
+            deviceScaleFactor: 2 // Increase resolution for sharper image
+        });
+
+        // Ensure fonts and content are fully loaded
         await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 1000)));
         await page.evaluateHandle('document.fonts.ready');
 
+        // Take screenshot with optimized settings
         const screenshot = await page.screenshot({
-            fullPage: true,
+            fullPage: false, // Changed to false to use viewport dimensions
             type: 'png',
-            encoding: 'binary'
+            encoding: 'binary',
+            clip: {
+                x: 0,
+                y: 0,
+                width: 1400,
+                height: 50 * rowCount + 250
+            }
         });
 
         await browser.close();
